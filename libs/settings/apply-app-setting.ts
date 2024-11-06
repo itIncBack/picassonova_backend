@@ -8,7 +8,7 @@ import { HttpExceptionFilter } from '@infrastructure/exception-filters/http-exce
 import { useContainer } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
-import { GatewayModule } from "@apps/gateway/src/gateway.module";
+import { GatewayModule } from '@apps/gateway/src/gateway.module';
 import { MicroserviceOptions, Transport } from "@nestjs/microservices";
 import { Configuration } from '@settings/configuration';
 
