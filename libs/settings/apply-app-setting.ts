@@ -126,7 +126,6 @@ const connectMicroservices = (app: INestApplication) => {
   const configService: ConfigService<Configuration, true> =
     app.get(ConfigService);
   const apiSettings = configService.get('apiSettings', { infer: true });
-
   // Подключение к микросервису Auth
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,

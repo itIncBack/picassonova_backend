@@ -10,7 +10,7 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
-        host: `${process.env.AUTH_SERVICE_HOST}`,
+        host: String(process.env.AUTH_SERVICE_HOST) ,
         port: Number(process.env.AUTH_SERVICE_PORT),
       },
     },

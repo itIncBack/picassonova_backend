@@ -6,7 +6,7 @@ export class APISettings {
 
   // Application
   @IsNumber()
-  public readonly PORT: number = Number(this.envVariables.AUTH_SERVICE_PORT);
+  public readonly PORT: number = Number(this.envVariables.PORT);
   @IsNumber()
   public readonly AUTH_SERVICE_PORT: number = Number(
     this.envVariables.AUTH_SERVICE_PORT,

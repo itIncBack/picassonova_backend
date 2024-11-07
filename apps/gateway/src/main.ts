@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { Configuration } from '@settings/configuration';
 
 async function bootstrap() {
+
   const app = await NestFactory.create(GatewayModule);
 
   applyAppSettings(app);
