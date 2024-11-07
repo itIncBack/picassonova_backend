@@ -17,7 +17,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/gateway/test/jest-e2e.json",
     "build:gateway":"nest build gateway",
-    "start:gateway": "node dist/apps/gateway/main"
+    "start:gateway": "node dist/apps/gateway/main",
+    "build:files":"nest build files",
+    "start:files": "node dist/apps/files/main"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

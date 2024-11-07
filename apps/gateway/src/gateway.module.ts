@@ -1,10 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GatewayController } from './gateway.controller';
 import { GatewayService } from './gateway.service';
-import {
-  ClientsModule,
-  Transport,
-} from '@nestjs/microservices';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { FilesModule } from '@apps/files/src/files.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration, { validate } from '@settings/configuration';
