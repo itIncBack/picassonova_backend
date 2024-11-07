@@ -1,61 +1,20 @@
 import { EnvironmentVariable } from './configuration';
-import { IsEmail, IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
+
 export class APISettings {
   constructor(private readonly envVariables: EnvironmentVariable) {}
+
   // Application
   @IsNumber()
-  public readonly PORT: number = Number(this.envVariables.PORT);
+  public readonly PORT: number = Number(this.envVariables.AUTH_SERVICE_PORT);
   @IsNumber()
-  public readonly AUTH_PORT: number = Number(this.envVariables.AUTH_PORT);
-  @IsString()
-  public readonly HOST: string = String(this.envVariables.HOST);
-
-  //Admin login and pass
-  @IsString()
-  public readonly ADMIN_AUTH_USERNAME: string =
-    this.envVariables.ADMIN_AUTH_USERNAME;
-  @IsString()
-  public readonly ADMIN_AUTH_PASSWORD: string =
-    this.envVariables.ADMIN_AUTH_PASSWORD;
-
-  //JWT
-  @IsString()
-  public readonly JWT_SECRET_KEY: string = this.envVariables.JWT_SECRET_KEY;
-  @IsString()
-  public readonly ACCESS_TOKEN_EXPIRED_IN: string =
-    this.envVariables.ACCESS_TOKEN_EXPIRED_IN;
-  @IsString()
-  public readonly REFRESH_TOKEN_EXPIRED_IN: string =
-    this.envVariables.REFRESH_TOKEN_EXPIRED_IN;
-
-  //EMAIL
-  @IsEmail()
-  public readonly EMAIL_USER: string = this.envVariables.EMAIL_USER;
-  @IsString()
-  public readonly EMAIL_PASS: string = this.envVariables.EMAIL_PASS;
-
-  //THROTTLER
-  @IsString()
-  public readonly THROTTLER_TTL: string = this.envVariables.THROTTLER_TTL;
-  @IsString()
-  public readonly THROTTLER_LIMIT: string = this.envVariables.THROTTLER_LIMIT;
-
-  //DATABASE
-  @IsString()
-  public readonly POSTGRES_HOST: string = this.envVariables.POSTGRES_HOST;
-
-  @IsNumber()
-  public readonly POSTGRES_PORT: number = Number(
-    this.envVariables.POSTGRES_PORT,
+  public readonly AUTH_SERVICE_PORT: number = Number(
+    this.envVariables.AUTH_SERVICE_PORT,
   );
-
   @IsString()
-  public readonly POSTGRES_USER: string = this.envVariables.POSTGRES_USER;
-
+  public readonly AUTH_SERVICE_HOST: string = String(
+    this.envVariables.AUTH_SERVICE_HOST,
+  );
   @IsString()
-  public readonly POSTGRES_PASSWORD: string =
-    this.envVariables.POSTGRES_PASSWORD;
-
-  @IsString()
-  public readonly POSTGRES_DB: string = this.envVariables.POSTGRES_DB;
+  public readonly ENV: string = String(this.envVariables.ENV);
 }

@@ -3,8 +3,11 @@ import { GatewayController } from './gateway.controller';
 import { GatewayService } from './gateway.service';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { AuthModule } from '../../auth/src/auth.module';
-import { ConfigModule } from '@nestjs/config';
-import configuration, { validate } from '@settings/configuration';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import configuration, {
+  ConfigurationType,
+  validate,
+} from '@settings/configuration';
 import { EnvironmentsEnum } from '@settings/env-settings';
 import { LoggerMiddleware } from '@infrastructure/middlewares/logger.middleware';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -29,10 +32,15 @@ import process from 'process';
     GatewayService,
     {
       provide: 'AUTH_SERVICE',
-      useFactory: () => {
+      useFactory: (configService: ConfigService<ConfigurationType, true>) => {
+        const apiSettings = configService.get('apiSettings', { infer: true });
+
         return ClientProxyFactory.create({
           transport: Transport.TCP,
-          options: { host: '127.0.0.1', port: 3002 },
+          options: {
+            host: apiSettings.AUTH_SERVICE_HOST,
+            port: apiSettings.AUTH_SERVICE_PORT,
+          },
         });
       },
     },

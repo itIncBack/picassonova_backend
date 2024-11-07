@@ -9,7 +9,7 @@ import { useContainer } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
 import { GatewayModule } from '@apps/gateway/src/gateway.module';
-import { MicroserviceOptions, Transport } from "@nestjs/microservices";
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Configuration } from '@settings/configuration';
 
 // Префикс нашего приложения (http://site.com/api/v1)
@@ -70,7 +70,8 @@ const setAppPrefix = (app: INestApplication) => {
 };
 
 const setSwagger = (app: INestApplication) => {
-  const configService: ConfigService<Configuration, true> = app.get(ConfigService);
+  const configService: ConfigService<Configuration, true> =
+    app.get(ConfigService);
   const environmentSettings = configService.get('environmentSettings', {
     infer: true,
   });
@@ -122,13 +123,17 @@ const setAppPipes = (app: INestApplication) => {
 };
 
 const connectMicroservices = (app: INestApplication) => {
-  const configService: ConfigService<Configuration, true> = app.get(ConfigService);
+  const configService: ConfigService<Configuration, true> =
+    app.get(ConfigService);
   const apiSettings = configService.get('apiSettings', { infer: true });
 
   // Подключение к микросервису Auth
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
-    options: { host: `${apiSettings.HOST}`, port: apiSettings.AUTH_PORT },
+    options: {
+      host: apiSettings.AUTH_SERVICE_HOST,
+      port: apiSettings.AUTH_SERVICE_PORT,
+    },
   });
 };
 
