@@ -126,12 +126,13 @@ const connectMicroservices = (app: INestApplication) => {
   const configService: ConfigService<Configuration, true> =
     app.get(ConfigService);
   const apiSettings = configService.get('apiSettings', { infer: true });
-  // Подключение к микросервису Auth
+
+  // Подключение к микросервису Files
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
-      host: apiSettings.AUTH_SERVICE_HOST,
-      port: apiSettings.AUTH_SERVICE_PORT,
+      host: apiSettings.FILES_SERVICE_HOST,
+      port: apiSettings.FILES_SERVICE_PORT,
     },
   });
 };

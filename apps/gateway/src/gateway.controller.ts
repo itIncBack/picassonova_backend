@@ -7,17 +7,16 @@ import { Observable } from 'rxjs';
 export class GatewayController {
   constructor(
     private readonly gatewayService: GatewayService,
-    @Inject('AUTH_SERVICE') private readonly client: ClientProxy,
+    @Inject('FILES_SERVICE') private readonly client: ClientProxy,
   ) {}
 
-  @Get('/test')
+  @Get('/gateway')
   getTest() {
-    return 'test';
+    return 'gateway';
   }
 
-  @Get(':id')
+  @Get('/files')
   getHello(): Observable<any> {
-    // return this.gatewayService.getHello();
     return this.client.send({ cmd: 'get-hello' }, { id: 1 });
   }
 }
