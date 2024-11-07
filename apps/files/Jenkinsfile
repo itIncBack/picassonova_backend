@@ -3,13 +3,13 @@ pipeline {
     agent any
     environment {
         ENV_TYPE = "production"
-        PORT = 3612
+        PORT = 3619
         NAMESPACE = "picassonova-online"
         REGISTRY_HOSTNAME = "itincback"
-        PROJECT = "picassonova-gateway"
-        SERVICE="gateway"
+        PROJECT = "picassonova-files"
+        SERVICE="files"
         REGISTRY = "registry.hub.docker.com"
-        DEPLOYMENT_NAME = "picassonova-gateway-deployment"
+        DEPLOYMENT_NAME = "picassonova-files-deployment"
         IMAGE_NAME = "${env.BUILD_ID}_${env.ENV_TYPE}_${env.GIT_COMMIT}"
         DOCKER_BUILD_NAME = "${env.REGISTRY_HOSTNAME}/${env.PROJECT}:${env.IMAGE_NAME}"
     }

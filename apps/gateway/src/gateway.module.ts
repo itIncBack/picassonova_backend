@@ -1,7 +1,11 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GatewayController } from './gateway.controller';
 import { GatewayService } from './gateway.service';
-import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import {
+  ClientProxyFactory,
+  ClientsModule,
+  Transport,
+} from '@nestjs/microservices';
 import { FilesModule } from '@apps/files/src/files.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration, { validate } from '@settings/configuration';
@@ -26,22 +30,32 @@ config();
         process.env.ENV !== EnvironmentsEnum.TESTING,
     }),
     FilesModule,
+    ClientsModule.register([
+      {
+        name: 'FILES_SERVICE', // Название клиента
+        transport: Transport.TCP,
+        options: {
+          host: String(process.env.FILES_SERVICE_HOST),
+          port: Number(process.env.FILES_SERVICE_PORT),
+        },
+      },
+    ]),
   ],
   controllers: [GatewayController],
   providers: [
     GatewayService,
-    {
-      provide: 'FILES_SERVICE',
-      useFactory: () => {
-        return ClientProxyFactory.create({
-          transport: Transport.TCP,
-          options: {
-            host: String(process.env.FILES_SERVICE_HOST),
-            port: Number(process.env.FILES_SERVICE_PORT),
-          },
-        });
-      },
-    },
+    // {
+    //   provide: 'FILES_SERVICE',
+    //   useFactory: () => {
+    //     return ClientProxyFactory.create({
+    //       transport: Transport.TCP,
+    //       options: {
+    //         host: String(process.env.FILES_SERVICE_HOST),
+    //         port: Number(process.env.FILES_SERVICE_PORT),
+    //       },
+    //     });
+    //   },
+    // },
   ],
 })
 export class GatewayModule implements NestModule {
