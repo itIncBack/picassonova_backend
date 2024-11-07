@@ -2,7 +2,6 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GatewayController } from './gateway.controller';
 import { GatewayService } from './gateway.service';
 import {
-  ClientProxyFactory,
   ClientsModule,
   Transport,
 } from '@nestjs/microservices';

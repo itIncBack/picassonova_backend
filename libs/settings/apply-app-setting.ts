@@ -49,7 +49,7 @@ export const applyAppSettings = (app: INestApplication) => {
   setAppExceptionsFilters(app);
 
   // Подключение микросервисов
-  connectMicroservices(app);
+  // connectMicroservices(app);
 };
 
 const setEnableCors = (app: INestApplication) => {
@@ -122,20 +122,20 @@ const setAppPipes = (app: INestApplication) => {
   );
 };
 
-const connectMicroservices = (app: INestApplication) => {
-  const configService: ConfigService<Configuration, true> =
-    app.get(ConfigService);
-  const apiSettings = configService.get('apiSettings', { infer: true });
-
-  // Подключение к микросервису Files
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
-    options: {
-      host: apiSettings.FILES_SERVICE_HOST,
-      port: apiSettings.FILES_SERVICE_PORT,
-    },
-  });
-};
+// const connectMicroservices = (app: INestApplication) => {
+//   const configService: ConfigService<Configuration, true> =
+//     app.get(ConfigService);
+//   const apiSettings = configService.get('apiSettings', { infer: true });
+//
+//   // Подключение к микросервису Files
+//   app.connectMicroservice<MicroserviceOptions>({
+//     transport: Transport.TCP,
+//     options: {
+//       host: apiSettings.FILES_SERVICE_HOST,
+//       port: apiSettings.FILES_SERVICE_PORT,
+//     },
+//   });
+// };
 
 const setAppExceptionsFilters = (app: INestApplication) => {
   app.useGlobalFilters(new HttpExceptionFilter());

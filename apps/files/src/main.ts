@@ -10,7 +10,8 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
-        host: String(process.env.FILES_SERVICE_HOST),
+        //host: String(process.env.FILES_SERVICE_HOST),
+        host: '0.0.0.0',
         port: Number(process.env.FILES_SERVICE_PORT),
       },
     },
