@@ -1,4 +1,4 @@
-import { GatewayController } from './gatewayController';
+import { GatewayController } from './gateway.controller';
 
 describe('GatewayController', () => {
 
