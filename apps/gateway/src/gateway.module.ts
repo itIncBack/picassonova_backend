@@ -1,18 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GatewayController } from './gateway.controller';
 import { GatewayService } from './gateway.service';
-import {
-  ClientOptions,
-  ClientProxyFactory,
-  ClientsModule,
-  Transport,
-} from '@nestjs/microservices';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { FilesModule } from '@apps/files/src/files.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import configuration, {
-  ConfigurationType,
-  validate,
-} from '@settings/configuration';
+import { ConfigModule } from '@nestjs/config';
+import configuration, { validate } from '@settings/configuration';
 import { EnvironmentsEnum } from '@settings/env-settings';
 import { LoggerMiddleware } from '@infrastructure/middlewares/logger.middleware';
 import { CqrsModule } from '@nestjs/cqrs';
