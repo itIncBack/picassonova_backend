@@ -27,6 +27,11 @@ spec:
                  secretKeyRef:
                    name: picassonova-files-production-config-secret
                    key: FILES_SERVICE_HOST
+             - name: ENV
+               valueFrom:
+                 secretKeyRef:
+                   name: picassonova-files-production-config-secret
+                   key: ENV
              - name: FILES_SERVICE_PORT
                valueFrom:
                  secretKeyRef:

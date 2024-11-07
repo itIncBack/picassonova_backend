@@ -21,3 +21,19 @@ spec:
            ports:
              - containerPort: PORT_CONTAINER
 
+           env:
+             - name: FILES_SERVICE_HOST
+               valueFrom:
+                 secretKeyRef:
+                   name: picassonova-gateway-production-config-secret
+                   key: FILES_SERVICE_HOST
+             - name: ENV
+               valueFrom:
+                 secretKeyRef:
+                   name: picassonova-gateway-production-config-secret
+                   key: ENV
+             - name: FILES_SERVICE_PORT
+               valueFrom:
+                 secretKeyRef:
+                   name: picassonova-gateway-production-config-secret
+                   key: FILES_SERVICE_PORT

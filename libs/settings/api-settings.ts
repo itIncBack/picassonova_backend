@@ -15,10 +15,10 @@ export class APISettings {
   public readonly FILES_SERVICE_HOST: string = String(
     this.envVariables.FILES_SERVICE_HOST,
   );
-  @IsString()
-  public readonly GATEWAY_SERVICE_HOST: string = String(
-    this.envVariables.GATEWAY_SERVICE_HOST,
-  );
+  // @IsString()
+  // public readonly GATEWAY_SERVICE_HOST: string = String(
+  //   this.envVariables.GATEWAY_SERVICE_HOST,
+  // );
   @IsString()
   public readonly ENV: string = String(this.envVariables.ENV);
 }
