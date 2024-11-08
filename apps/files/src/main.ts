@@ -20,6 +20,7 @@ async function bootstrap() {
   );
 
   await app.listen();
+  console.log(`Microservice is running on port ${process.env.FILES_SERVICE_PORT}`);
 }
 
 config();

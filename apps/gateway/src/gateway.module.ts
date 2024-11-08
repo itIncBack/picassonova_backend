@@ -32,7 +32,7 @@ config();
         transport: Transport.TCP,
         options: {
           //host: String(process.env.FILES_SERVICE_HOST),
-          host: '0.0.0.0',
+          host: 'picassonova-files-service',
           port: Number(process.env.FILES_SERVICE_PORT),
         },
       },
