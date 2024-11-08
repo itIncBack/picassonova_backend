@@ -16,9 +16,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/gateway/test/jest-e2e.json",
-    "build:gateway": "nest build gateway",
+    "build:gateway": "nest build gateway && npx prisma migrate deploy",
     "start:gateway": "node dist/apps/gateway/main",
-    "build:files": "nest build files",
+    "build:files": "nest build files && npx prisma migrate deploy",
     "start:files": "node dist/apps/files/main",
     "migrate:add": "npx prisma migrate dev --name init",
     "migrate:deploy": "npx prisma migrate deploy"
