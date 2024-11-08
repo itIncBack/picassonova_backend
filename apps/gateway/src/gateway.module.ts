@@ -3,8 +3,8 @@ import { GatewayController } from './gateway.controller';
 import { GatewayService } from './gateway.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { FilesModule } from '@apps/files/src/files.module';
-import { ConfigModule } from '@nestjs/config';
-import configuration, { validate } from '@settings/configuration';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import configuration, { Configuration, validate } from '@settings/configuration';
 import { EnvironmentsEnum } from '@settings/env-settings';
 import { LoggerMiddleware } from '@infrastructure/middlewares/logger.middleware';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -26,14 +26,22 @@ config();
         process.env.ENV !== EnvironmentsEnum.TESTING,
     }),
     FilesModule,
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
-        name: 'FILES_SERVICE', // Название клиента
-        transport: Transport.TCP,
-        options: {
-          host: String(process.env.FILES_SERVICE_HOST),
-          port: Number(process.env.FILES_SERVICE_PORT),
+        name: 'FILES_SERVICE',
+        imports: [ConfigModule], // Импортируем ConfigModule для доступа к конфигурации
+        useFactory: async (configService: ConfigService<Configuration, true>) => {
+          const apiSettings = configService.get('apiSettings', { infer: true });
+
+          return {
+            transport: Transport.TCP,
+            options: {
+              host: apiSettings.FILES_SERVICE_HOST, // Получаем хост из конфигурации
+              port: apiSettings.FILES_SERVICE_PORT, // Получаем порт из конфигурации
+            },
+          }
         },
+        inject: [ConfigService], // Внедряем ConfigService для получения конфигурации
       },
     ]),
   ],
