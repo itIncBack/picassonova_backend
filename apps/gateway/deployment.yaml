@@ -32,6 +32,16 @@ spec:
                  secretKeyRef:
                    name: picassonova-gateway-production-config-secret
                    key: ENV
+             - name: DATABASE_URL
+               valueFrom:
+                 secretKeyRef:
+                   name: picassonova-gateway-production-config-secret
+                   key: DATABASE_URL
+             - name: SHADOW_DATABASE_URL
+               valueFrom:
+                 secretKeyRef:
+                   name: picassonova-gateway-production-config-secret
+                   key: SHADOW_DATABASE_URL
              - name: FILES_SERVICE_PORT
                valueFrom:
                  secretKeyRef:

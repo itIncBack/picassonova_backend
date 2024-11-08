@@ -17,4 +17,11 @@ export class APISettings {
   );
   @IsString()
   public readonly ENV: string = String(this.envVariables.ENV);
+
+  @IsString()
+  public readonly DATABASE_URL: string = String(this.envVariables.DATABASE_URL);
+  @IsString()
+  public readonly SHADOW_DATABASE_URL: string = String(
+    this.envVariables.SHADOW_DATABASE_URL,
+  );
 }

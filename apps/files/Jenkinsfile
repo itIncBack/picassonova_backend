@@ -54,6 +54,35 @@ pipeline {
                 echo "Build image finished..."
             }
         }
+        stage('Prisma Migrations: Add') {
+            steps {
+                script {
+                   echo "Running Prisma migrate:add..."
+                       sh '''
+                                export NVM_DIR="$HOME/.nvm"
+                                [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                                nvm use --lts
+                                yarn migrate:add
+                         '''
+               }
+            }
+        }
+
+        stage('Prisma Migrations: Deploy') {
+                      steps {
+                           script {
+                                    echo "Running Prisma migrate:deploy..."
+                                    sh '''
+                                        export NVM_DIR="$HOME/.nvm"
+                                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                                        nvm use --lts
+                                        yarn install
+                                        yarn migrate:deploy
+                                    '''
+                                    }
+                      }
+        }
+
         stage('Push docker image') {
              steps {
                  echo "Push image started..."

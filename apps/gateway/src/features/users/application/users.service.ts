@@ -7,7 +7,6 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async createUser(): Promise<InterlayerNotice> {
-
     return await this.usersRepository.create();
   }
 }
