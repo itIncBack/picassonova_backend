@@ -1,3 +1,4 @@
+# Check out https://hub.docker.com/_/node to select a new base image
 FROM node:20.11-alpine
 ARG port
 ARG service
@@ -25,7 +26,6 @@ RUN npm install
 # Bundle app source code
 COPY --chown=node . .
 
-# Build the application for the specified service
 RUN npm run build:${SERVICE}
 
 # Bind to all network interfaces so that it can be mapped to the host OS

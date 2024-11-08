@@ -12,8 +12,6 @@ pipeline {
         DEPLOYMENT_NAME = "picassonova-gateway-deployment"
         IMAGE_NAME = "${env.BUILD_ID}_${env.ENV_TYPE}_${env.GIT_COMMIT}"
         DOCKER_BUILD_NAME = "${env.REGISTRY_HOSTNAME}/${env.PROJECT}:${env.IMAGE_NAME}"
-        DATABASE_URL = credentials('DATABASE_URL')
-        SHADOW_DATABASE_URL = credentials('SHADOW_DATABASE_URL')
     }
 
     stages {
