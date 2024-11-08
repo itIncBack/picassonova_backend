@@ -3,6 +3,8 @@ ARG port
 ARG service
 ENV SERVICE=$service
 ENV PORT=$port
+ENV DATABASE_URL=$database_url
+ENV SHADOW_DATABASE_URL=$shadow_database_url
 # Set to a non-root built-in user `node`
 
 USER node
