@@ -31,8 +31,8 @@ config();
         name: 'FILES_SERVICE', // Название клиента
         transport: Transport.TCP,
         options: {
-          //host: String(process.env.FILES_SERVICE_HOST),
-          host: 'picassonova-files-service',
+          host: String(process.env.FILES_SERVICE_HOST),
+          //host: 'picassonova-files-service',
           port: Number(process.env.FILES_SERVICE_PORT),
         },
       },
@@ -41,18 +41,6 @@ config();
   controllers: [GatewayController],
   providers: [
     GatewayService,
-    // {
-    //   provide: 'FILES_SERVICE',
-    //   useFactory: () => {
-    //     return ClientProxyFactory.create({
-    //       transport: Transport.TCP,
-    //       options: {
-    //         host: String(process.env.FILES_SERVICE_HOST),
-    //         port: Number(process.env.FILES_SERVICE_PORT),
-    //       },
-    //     });
-    //   },
-    // },
   ],
 })
 export class GatewayModule implements NestModule {
