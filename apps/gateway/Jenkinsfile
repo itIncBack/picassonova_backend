@@ -12,6 +12,8 @@ pipeline {
         DEPLOYMENT_NAME = "picassonova-gateway-deployment"
         IMAGE_NAME = "${env.BUILD_ID}_${env.ENV_TYPE}_${env.GIT_COMMIT}"
         DOCKER_BUILD_NAME = "${env.REGISTRY_HOSTNAME}/${env.PROJECT}:${env.IMAGE_NAME}"
+        DATABASE_URL = credentials('DATABASE_URL')
+        SHADOW_DATABASE_URL = credentials('SHADOW_DATABASE_URL')
     }
 
     stages {
@@ -71,6 +73,17 @@ pipeline {
                     sh "docker rmi -f ${env.DOCKER_BUILD_NAME}"
                  }
              }
+        }
+        stage('Run Database Migrations') {
+            steps {
+                echo "Running Prisma migrations..."
+                script {
+                    docker.image("${env.DOCKER_BUILD_NAME}")
+                        .inside("--env DATABASE_URL=${env.DATABASE_URL}") {
+                            sh 'npx prisma migrate deploy'
+                    }
+                }
+            }
         }
         stage('Preparing deployment') {
              steps {

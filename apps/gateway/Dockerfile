@@ -4,8 +4,6 @@ ARG port
 ARG service
 ENV SERVICE=$service
 ENV PORT=$port
-ENV DATABASE_URL=$database_url
-ENV SHADOW_DATABASE_URL=$shadow_database_url
 # Set to a non-root built-in user `node`
 
 USER node
@@ -27,12 +25,6 @@ RUN npm install
 
 # Bundle app source code
 COPY --chown=node . .
-
-# Generate migrations (if needed)
-RUN npm run migrate:add
-
-# Run migrations before building the application
-RUN npm run migrate:deploy
 
 RUN npm run build:${SERVICE}
 
