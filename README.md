@@ -58,6 +58,26 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
+## Migration
+
+```bash
+# add migration
+npx prisma migrate dev --name init
+
+# apply migration
+npx prisma migrate deploy
+
+# migration status
+npx prisma migrate status
+
+# reset last migration
+npx prisma migrate reset
+
+# prisma studio
+npx prisma studio
+
+```
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).

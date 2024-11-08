@@ -16,7 +16,7 @@ export class GatewayController {
   }
 
   @Get('/files')
-  getHello(): Observable<any> {
+  redirectToFileService(): Observable<any> {
     return this.client.send({ cmd: 'get-hello' }, { id: 1 });
   }
 }
