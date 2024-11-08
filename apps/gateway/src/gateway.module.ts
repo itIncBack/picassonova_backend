@@ -32,16 +32,13 @@ config();
         transport: Transport.TCP,
         options: {
           host: String(process.env.FILES_SERVICE_HOST),
-          //host: 'picassonova-files-service',
           port: Number(process.env.FILES_SERVICE_PORT),
         },
       },
     ]),
   ],
   controllers: [GatewayController],
-  providers: [
-    GatewayService,
-  ],
+  providers: [GatewayService],
 })
 export class GatewayModule implements NestModule {
   // https://docs.nestjs.com/middleware#applying-middleware

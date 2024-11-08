@@ -6,12 +6,10 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { getCurrentISOStringDate } from '@utils/dates';
-import { InterlayerNoticeExtension } from '@base/models/Interlayer';
-
-export type ErrorResponse = {
-  errorsMessages: InterlayerNoticeExtension[];
-};
+import {
+  InterlayerNotice,
+  InterlayerNoticeExtension,
+} from '@base/models/Interlayer';
 
 // https://docs.nestjs.com/exception-filters
 @Catch(HttpException)
@@ -22,34 +20,39 @@ export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    if (status === HttpStatus.BAD_REQUEST) {
-      const errorsResponse: ErrorResponse = {
-        errorsMessages: [],
-      };
+    const notice = new InterlayerNotice<null>(null); // Создаем новый экземпляр InterlayerNotice
 
+    if (status === HttpStatus.BAD_REQUEST) {
       const responseBody: any = exception.getResponse();
 
       if (Array.isArray(responseBody.message)) {
         responseBody.message.forEach((e) => {
-          errorsResponse.errorsMessages.push(
+          notice.extensions.push(
             new InterlayerNoticeExtension(e.message, e.key),
           );
         });
       } else if (typeof responseBody === 'object') {
-        errorsResponse.errorsMessages.push(
+        notice.extensions.push(
           new InterlayerNoticeExtension(responseBody.message, responseBody.key),
         );
       } else {
-        errorsResponse.errorsMessages.push(responseBody.message);
+        notice.extensions.push(
+          new InterlayerNoticeExtension(responseBody.message, null),
+        );
       }
 
-      response.status(status).json(errorsResponse);
+      notice.code = status; // Устанавливаем код ошибки
+      response.status(status).json(notice); // Возвращаем InterlayerNotice в ответе
     } else {
-      response.status(status).json({
-        statusCode: status,
-        timestamp: getCurrentISOStringDate(),
-        path: request.url,
-      });
+      notice.addError('An error occurred', null, status);
+      notice.extensions.push(
+        new InterlayerNoticeExtension(
+          'Error details',
+          `Status: ${status}, Path: ${request.url}, Timestamp: ${new Date().toISOString()}`,
+        ),
+      );
+
+      response.status(status).json(notice); // Возвращаем InterlayerNotice в ответе
     }
   }
 }

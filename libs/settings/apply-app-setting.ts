@@ -9,7 +9,6 @@ import { useContainer } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
 import { GatewayModule } from '@apps/gateway/src/gateway.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Configuration } from '@settings/configuration';
 
 // Префикс нашего приложения (http://site.com/api/v1)
@@ -47,9 +46,6 @@ export const applyAppSettings = (app: INestApplication) => {
 
   // Применение глобальных exceptions filters
   setAppExceptionsFilters(app);
-
-  // Подключение микросервисов
-  // connectMicroservices(app);
 };
 
 const setEnableCors = (app: INestApplication) => {
@@ -121,21 +117,6 @@ const setAppPipes = (app: INestApplication) => {
     }),
   );
 };
-
-// const connectMicroservices = (app: INestApplication) => {
-//   const configService: ConfigService<Configuration, true> =
-//     app.get(ConfigService);
-//   const apiSettings = configService.get('apiSettings', { infer: true });
-//
-//   // Подключение к микросервису Files
-//   app.connectMicroservice<MicroserviceOptions>({
-//     transport: Transport.TCP,
-//     options: {
-//       host: apiSettings.FILES_SERVICE_HOST,
-//       port: apiSettings.FILES_SERVICE_PORT,
-//     },
-//   });
-// };
 
 const setAppExceptionsFilters = (app: INestApplication) => {
   app.useGlobalFilters(new HttpExceptionFilter());
