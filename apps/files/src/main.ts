@@ -3,10 +3,12 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { GatewayModule } from '../../gateway/src/gateway.module';
 import * as process from 'process';
 import { config } from 'dotenv';
+import { FilesModule } from '@apps/files/src/files.module';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    GatewayModule,
+    // GatewayModule,
+    FilesModule,
     {
       transport: Transport.TCP,
       options: {
