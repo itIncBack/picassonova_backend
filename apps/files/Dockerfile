@@ -41,5 +41,5 @@ RUN npm run build:${SERVICE}
 
 EXPOSE ${PORT}
 
-CMD npm run migrate:deploy && npm run 'start:files'
+CMD npm run migrate:add && npm run migrate:deploy && npm run 'start:files'
 #CMD npm run 'start:files'
