@@ -10,6 +10,6 @@ export class UsersController {
   async get(@Body() input: CreateUserDto) {
     const { email } = input;
 
-    await this.usersService.createUser(email);
+    return await this.usersService.createUser(email);
   }
 }
