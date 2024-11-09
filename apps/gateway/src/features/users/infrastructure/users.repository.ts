@@ -6,16 +6,17 @@ import { InterlayerNotice } from '@base/models/Interlayer';
 export class UsersRepository {
   constructor(private prisma: PrismaService) {}
 
-  public async create(): Promise<InterlayerNotice> {
+  public async create(email: string): Promise<InterlayerNotice> {
     const notice = new InterlayerNotice();
-
+    console.log('email', email);
     try {
-      await this.prisma.user.create({
+      console.log('test1');
+      const res = await this.prisma.user.create({
         data: {
-          email: 'email@email.com',
+          email,
         },
       });
-
+      console.log('res', res);
       return notice;
     } catch (e) {
       throw new InternalServerErrorException(

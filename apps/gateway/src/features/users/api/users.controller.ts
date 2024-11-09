@@ -1,12 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { UsersService } from '@apps/gateway/src/features/users/application/users.service';
+import { CreateUserDto } from '@apps/gateway/src/features/users/api/dto/input/create-user.input.dto';
 
 @Controller('/gateway/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('/create')
-  async get() {
-    await this.usersService.createUser();
+  @Post('/create')
+  async get(@Body() input: CreateUserDto) {
+    const { email } = input;
+
+    await this.usersService.createUser(email);
   }
 }

@@ -6,7 +6,7 @@ import { InterlayerNotice } from '@base/models/Interlayer';
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async createUser(): Promise<InterlayerNotice> {
-    return await this.usersRepository.create();
+  async createUser(email: string): Promise<InterlayerNotice> {
+    return await this.usersRepository.create(email);
   }
 }
