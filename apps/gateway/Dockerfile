@@ -41,4 +41,5 @@ RUN npm run build:${SERVICE}
 
 EXPOSE ${PORT}
 
-CMD npm run 'start:gateway'
+CMD npm run migrate:deploy && npm run start:gateway
+#CMD npm run 'start:gateway'
