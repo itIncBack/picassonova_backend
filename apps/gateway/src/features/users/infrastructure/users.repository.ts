@@ -8,15 +8,14 @@ export class UsersRepository {
 
   public async create(email: string): Promise<InterlayerNotice> {
     const notice = new InterlayerNotice();
-    console.log('email', email);
+
     try {
-      console.log('test1');
-      const res = await this.prisma.user.create({
+      await this.prisma.user.create({
         data: {
           email,
         },
       });
-      console.log('res', res);
+
       return notice;
     } catch (e) {
       throw new InternalServerErrorException(
