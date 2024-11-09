@@ -32,10 +32,10 @@ COPY --chown=node . .
 
 RUN npm run build:${SERVICE}
 
-RUN echo $DATABASE_URL
-RUN npx prisma generate
-# Run database migrations
-RUN npm run migrate:deploy
+#RUN echo $DATABASE_URL
+#RUN npx prisma generate
+## Run database migrations
+#RUN npm run migrate:deploy
 
 # Bind to all network interfaces so that it can be mapped to the host OS
 
