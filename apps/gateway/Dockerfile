@@ -32,6 +32,9 @@ COPY --chown=node . .
 
 RUN npm run build:${SERVICE}
 
+# Run database migrations
+RUN npm run migrate:deploy
+
 # Bind to all network interfaces so that it can be mapped to the host OS
 
 EXPOSE ${PORT}
