@@ -8,7 +8,6 @@ async function bootstrap() {
   const app = await NestFactory.create(GatewayModule);
 
   applyAppSettings(app);
-  console.log();
 
   const configService: ConfigService<Configuration, true> =
     app.get(ConfigService);
