@@ -13,6 +13,7 @@ async function bootstrap() {
     app.get(ConfigService);
   const apiSettings = configService.get('apiSettings', { infer: true });
 
+  console.log("sadaasdasd");
   await app.listen(apiSettings.PORT, () => {
     console.log('Gateway App starting listen port: ', apiSettings.PORT);
   });
