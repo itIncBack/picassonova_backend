@@ -9,6 +9,8 @@ async function bootstrap() {
 
   applyAppSettings(app);
 
+  console.log('test');
+
   const configService: ConfigService<Configuration, true> =
     app.get(ConfigService);
   const apiSettings = configService.get('apiSettings', { infer: true });
