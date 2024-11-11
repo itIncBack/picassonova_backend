@@ -3,12 +3,12 @@
   "name": "picassonova",
   "builds": [
     {
-      "src": "apps/files/src/main.ts",
+      "src": "dist/apps/files/src/main.js",
       "use": "@vercel/node",
       "config": { "distDir": "dist/apps/files" }
     },
     {
-      "src": "apps/gateway/src/main.ts",
+      "src": "dist/apps/gateway/src/main.js",
       "use": "@vercel/node",
       "config": { "distDir": "dist/apps/gateway" }
     }
@@ -16,12 +16,12 @@
   "routes": [
     {
       "src": "/api/v1/files/(.*)",
-      "dest": "apps/files/src/main.ts",
+      "dest": "dist/apps/files/main.js",
       "methods": ["GET", "POST", "PUT", "DELETE", "PATCH"]
     },
     {
       "src": "/api/v1/gateway/(.*)",
-      "dest": "apps/gateway/src/main.ts",
+      "dest": "dist/apps/gateway/main.js",
       "methods": ["GET", "POST", "PUT", "DELETE", "PATCH"]
     }
   ]
