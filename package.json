@@ -11,6 +11,7 @@
     "start-dev:gateway": "cross-env ENV=DEVELOPMENT nest start gateway --watch",
     "start-dev:files": "cross-env ENV=DEVELOPMENT nest start files --watch",
     "start:all": "concurrently \"yarn start-dev:gateway\" \"yarn start-dev:files\"",
+    "build": "concurrently \"yarn build:gateway\" \"yarn build:files\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
