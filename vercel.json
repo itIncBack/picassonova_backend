@@ -3,12 +3,12 @@
   "name": "picassonova",
   "builds": [
     {
-      "src": "dist/apps/files/src/main.js",
+      "src": "apps/files/src/main.ts",
       "use": "@vercel/node",
       "config": { "distDir": "dist/apps/files" }
     },
     {
-      "src": "dist/apps/gateway/src/main.js",
+      "src": "apps/gateway/src/main.ts",
       "use": "@vercel/node",
       "config": { "distDir": "dist/apps/gateway" }
     }
