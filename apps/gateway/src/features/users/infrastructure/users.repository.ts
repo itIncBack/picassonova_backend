@@ -1,5 +1,4 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { SignUpDto } from '@apps/gateway/src/features/auth/api/dto/input/sign-up.input.dto';
 import { PrismaService } from '@prisma/prisma.service';
 import { CreateUser, NewUser, User } from './types';
 

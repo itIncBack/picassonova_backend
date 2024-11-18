@@ -10,11 +10,6 @@ export class GatewayController {
     @Inject('FILES_SERVICE') private readonly client: ClientProxy,
   ) {}
 
-  @Get('/gateway')
-  getTest() {
-    return 'gateway';
-  }
-
   @Get('/files')
   redirectToFileService(): Observable<any> {
     return this.client.send({ cmd: 'get-hello' }, { id: 1 });

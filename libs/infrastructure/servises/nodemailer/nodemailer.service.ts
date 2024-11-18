@@ -27,7 +27,7 @@ export class NodeMailer {
     subject: string,
     text: string,
     html: string,
-  ): Promise<unknown> {
+  ): Promise<void> {
     const apiSettings = this.configService.get('apiSettings', { infer: true });
 
     const mailOptions = {
@@ -43,8 +43,8 @@ export class NodeMailer {
         if (error) {
           return reject(error);
         } else {
-          console.log('Message sent: %s', info.messageId);
-          console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+          console.log('Message sent: ', info.messageId);
+          console.log('Preview URL: ', nodemailer.getTestMessageUrl(info));
 
           resolve();
         }
