@@ -76,6 +76,9 @@ npx prisma migrate reset
 # prisma studio
 npx prisma studio
 
+# prisma generate
+npx prisma generate
+
 ```
 
 ## Support
