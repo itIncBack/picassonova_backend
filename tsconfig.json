@@ -29,7 +29,7 @@
       "@utils/*": ["libs/utils/*"],
       "@base/*": ["libs/base/*"],
       "@apps/*": ["apps/*"],
-      "@prisma/*": ["prisma/*"]
+      "@prisma/*": ["prisma/*"],
     }
   },
 }

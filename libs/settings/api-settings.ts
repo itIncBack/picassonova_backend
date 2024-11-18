@@ -1,5 +1,5 @@
 import { EnvironmentVariable } from './configuration';
-import { IsNumber, IsString } from 'class-validator';
+import { IsEmail, IsNumber, IsString } from 'class-validator';
 
 export class APISettings {
   constructor(private readonly envVariables: EnvironmentVariable) {}
@@ -24,4 +24,20 @@ export class APISettings {
   public readonly SHADOW_DATABASE_URL: string = String(
     this.envVariables.SHADOW_DATABASE_URL,
   );
+
+  //EMAIL
+  @IsEmail()
+  public readonly EMAIL_USER: string = this.envVariables.EMAIL_USER;
+  @IsString()
+  public readonly EMAIL_PASS: string = this.envVariables.EMAIL_PASS;
+
+  //JWT
+  @IsString()
+  public readonly JWT_SECRET_KEY: string = this.envVariables.JWT_SECRET_KEY;
+  @IsString()
+  public readonly ACCESS_TOKEN_EXPIRED_IN: string =
+    this.envVariables.ACCESS_TOKEN_EXPIRED_IN;
+  @IsString()
+  public readonly REFRESH_TOKEN_EXPIRED_IN: string =
+    this.envVariables.REFRESH_TOKEN_EXPIRED_IN;
 }

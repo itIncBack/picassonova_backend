@@ -3,13 +3,18 @@ import { UsersController } from '@apps/gateway/src/features/users/api/users.cont
 import { UsersRepository } from '@apps/gateway/src/features/users/infrastructure/users.repository';
 import { PrismaModule } from '@prisma/prisma.module';
 import { UsersService } from '@apps/gateway/src/features/users/application/users.service';
+import { ConfirmationRepository } from '@apps/gateway/src/features/users/infrastructure/confirmation.repository';
 
-const usersProviders: Provider[] = [UsersRepository, UsersService];
+const usersProviders: Provider[] = [
+  UsersRepository,
+  ConfirmationRepository,
+  UsersService,
+];
 
 @Module({
   imports: [PrismaModule],
   providers: [...usersProviders],
   controllers: [UsersController],
-  exports: [UsersRepository],
+  exports: [...usersProviders],
 })
 export class UsersModule {}

@@ -6,10 +6,9 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '@infrastructure/exception-filters/http-exception-filter';
 import { useContainer } from 'class-validator';
-import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
 import { GatewayModule } from '@apps/gateway/src/gateway.module';
-import { Configuration } from '@settings/configuration';
+import { Application } from 'express';
 
 // Префикс нашего приложения (http://site.com/api/v1)
 export const APP_PREFIX = '/api/v1';
@@ -53,7 +52,7 @@ const setEnableCors = (app: INestApplication) => {
 };
 
 const setAppProxy = (app: INestApplication) => {
-  const expressApp = app.getHttpAdapter().getInstance();
+  const expressApp = app.getHttpAdapter().getInstance() as Application;
 
   expressApp.set('trust proxy', true);
 };
@@ -66,26 +65,19 @@ const setAppPrefix = (app: INestApplication) => {
 };
 
 const setSwagger = (app: INestApplication) => {
-  const configService: ConfigService<Configuration, true> =
-    app.get(ConfigService);
-  const environmentSettings = configService.get('environmentSettings', {
-    infer: true,
+  const swaggerPath = APP_PREFIX + '/swagger_doc';
+
+  const config = new DocumentBuilder()
+    .setTitle('PICASSO API')
+    // .addBearerAuth()
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+
+  SwaggerModule.setup(swaggerPath, app, document, {
+    customSiteTitle: 'Picasso Swagger',
   });
-
-  if (environmentSettings.isProduction()) {
-    const swaggerPath = APP_PREFIX + '/swagger-doc';
-
-    const config = new DocumentBuilder()
-      .setTitle('BLOGGER API')
-      .addBearerAuth()
-      .setVersion('1.0')
-      .build();
-
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup(swaggerPath, app, document, {
-      customSiteTitle: 'Blogger Swagger',
-    });
-  }
 };
 
 const setAppPipes = (app: INestApplication) => {
