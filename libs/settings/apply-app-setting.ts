@@ -8,6 +8,7 @@ import { HttpExceptionFilter } from '@infrastructure/exception-filters/http-exce
 import { useContainer } from 'class-validator';
 import cookieParser from 'cookie-parser';
 import { GatewayModule } from '@apps/gateway/src/gateway.module';
+import { Application } from 'express';
 
 // Префикс нашего приложения (http://site.com/api/v1)
 export const APP_PREFIX = '/api/v1';
@@ -51,7 +52,7 @@ const setEnableCors = (app: INestApplication) => {
 };
 
 const setAppProxy = (app: INestApplication) => {
-  const expressApp = app.getHttpAdapter().getInstance();
+  const expressApp = app.getHttpAdapter().getInstance() as Application;
 
   expressApp.set('trust proxy', true);
 };
