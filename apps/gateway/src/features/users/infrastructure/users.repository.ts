@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '@prisma/prisma.service';
-import { CreateUser, NewUser, User } from './types';
+import { CreateUser, NewUser, User, UserWithPass } from './types';
 
 @Injectable()
 export class UsersRepository {
@@ -40,6 +40,31 @@ export class UsersRepository {
           created_at: true,
           updated_at: true,
           role: true,
+        },
+      });
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'Error fetching user from database',
+      );
+    }
+  }
+
+  public async getUserByEmailWithPass(
+    email: string,
+  ): Promise<UserWithPass | null> {
+    try {
+      return await this.prisma.user.findFirst({
+        where: {
+          email: email,
+        },
+        select: {
+          id: true,
+          user_name: true,
+          email: true,
+          created_at: true,
+          updated_at: true,
+          role: true,
+          password: true,
         },
       });
     } catch (e) {

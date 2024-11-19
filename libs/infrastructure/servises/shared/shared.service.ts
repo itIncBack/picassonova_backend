@@ -12,7 +12,7 @@ export class SharedService {
     protected readonly jwtService: JwtService,
   ) {}
 
-  public async isCorrectPass(
+  public async validatePassword(
     password: string,
     userPassword: string,
   ): Promise<boolean> {
@@ -23,11 +23,23 @@ export class SharedService {
     return await this.hashBuilder.hash(password);
   }
 
+  public async getToken(
+    userId: string,
+    deviceId: string,
+    options?: JwtSignOptions,
+  ) {
+    const payload = { user_id: userId, device_id: deviceId };
+
+    return await this.jwtService.signAsync(payload, options);
+  }
+
   async generateConfirmationCode(
-    userName: string,
+    email: string,
     options?: JwtSignOptions,
   ): Promise<string> {
-    return await this.jwtService.signAsync({ user_name: userName }, options);
+    const payload = { email: email };
+
+    return await this.jwtService.signAsync(payload, options);
   }
 
   public async sendRegisterEmail(to: string, confirmationCode: string) {

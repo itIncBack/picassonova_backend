@@ -4,6 +4,8 @@ import { BadRequestException } from '@nestjs/common';
 import { SharedService } from '@infrastructure/servises/shared/shared.service';
 import { ConfirmationRepository } from '@apps/gateway/src/features/users/infrastructure/confirmation.repository';
 import { ConfirmationType } from '.prisma/client';
+import { ConfigService } from '@nestjs/config';
+import { ConfigurationType } from '@settings/configuration';
 
 export class SignUpCommand {
   constructor(
@@ -19,12 +21,15 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand, void> {
     private readonly usersRepository: UsersRepository,
     private readonly confirmationRepository: ConfirmationRepository,
     private readonly sharedService: SharedService,
+    private readonly configService: ConfigService<ConfigurationType, true>,
   ) {}
 
   async execute(command: SignUpCommand): Promise<void> {
     const { user_name, password, email } = command;
 
     const user = await this.usersRepository.getUserByEmail(email);
+
+    const apiSettings = this.configService.get('apiSettings', { infer: true });
 
     if (user) {
       throw new BadRequestException({
@@ -35,8 +40,12 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand, void> {
     const hashedPassword =
       await this.sharedService.generatePasswordHash(password);
 
-    const confirmationCode =
-      await this.sharedService.generateConfirmationCode(user_name);
+    const confirmationCode = await this.sharedService.generateConfirmationCode(
+      email,
+      {
+        expiresIn: apiSettings.EMAIL_CONFIRMATION_CODE_EXPIRED_IN,
+      },
+    );
 
     const newUser = await this.usersRepository.createUser({
       user_name,

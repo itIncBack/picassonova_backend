@@ -30,6 +30,9 @@ export class APISettings {
   public readonly EMAIL_USER: string = this.envVariables.EMAIL_USER;
   @IsString()
   public readonly EMAIL_PASS: string = this.envVariables.EMAIL_PASS;
+  @IsString()
+  public readonly EMAIL_CONFIRMATION_CODE_EXPIRED_IN: string =
+    this.envVariables.EMAIL_CONFIRMATION_CODE_EXPIRED_IN;
 
   //JWT
   @IsString()

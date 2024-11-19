@@ -5,14 +5,13 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
-
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
@@ -31,6 +30,7 @@ model User {
   role       Role     @default(BASIC)
 
   Confirmations Confirmation[]
+  Session       Session[]
 }
 
 enum ConfirmationType {
@@ -39,15 +39,25 @@ enum ConfirmationType {
 }
 
 model Confirmation {
-  id                  String   @id @default(uuid()) @db.Uuid
-  user_id             String   @db.Uuid
-  code                String   @db.VarChar()
-  type                ConfirmationType
-  is_confirmed        Boolean  @default(false)
-  created_at          DateTime @default(now()) @db.Timestamptz()
-  updated_at          DateTime @updatedAt @db.Timestamptz()
+  id           String           @id @default(uuid()) @db.Uuid
+  user_id      String           @db.Uuid
+  code         String           @db.VarChar()
+  type         ConfirmationType
+  is_confirmed Boolean          @default(false)
+  created_at   DateTime         @default(now()) @db.Timestamptz()
+  updated_at   DateTime         @updatedAt @db.Timestamptz()
 
-  user User @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
+model Session {
+  id         String   @id @default(uuid()) @db.Uuid
+  user_id    String   @db.Uuid
+  ip         String
+  title      String
+  created_at DateTime @default(now()) @db.Timestamptz()
+  updated_at DateTime @updatedAt @db.Timestamptz()
+  device_id  String   @db.Uuid
 
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}

@@ -26,8 +26,7 @@
     "paths": {
       "@settings/*": ["libs/settings/*"],
       "@infrastructure/*": ["libs/infrastructure/*"],
-      "@utils/*": ["libs/utils/*"],
-      "@base/*": ["libs/base/*"],
+      "@libs/*": ["libs/*"],
       "@apps/*": ["apps/*"],
       "@prisma/*": ["prisma/*"],
     }

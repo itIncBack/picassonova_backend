@@ -1,0 +1,88 @@
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { Response, Request } from 'express';
+import {
+  SignInOutputMapper,
+  SignInOutputDto,
+} from '@apps/gateway/src/features/auth/api/dto/output/sign-in.output.dto';
+import { SharedService } from '@infrastructure/servises/shared/shared.service';
+import { UsersRepository } from '@apps/gateway/src/features/users/infrastructure/users.repository';
+import { UnauthorizedException } from '@nestjs/common';
+import { getUniqueId } from '@libs/utils/utils';
+import { ConfigurationType } from '@settings/configuration';
+import { ConfigService } from '@nestjs/config';
+import { CookieService } from '@infrastructure/servises/cookie/cookie.service';
+import { COOKIE_KEY } from '@libs/utils/consts';
+import { NewSessionDto } from '@apps/gateway/src/features/session/api/dto/new-session.dto';
+import { SessionsRepository } from '@apps/gateway/src/features/session/infrastructure/sessions.repository';
+import { InterlayerNotice } from '@libs/base/models/Interlayer';
+
+export class SignInCommand {
+  constructor(
+    public email: string,
+    public password: string,
+    public res: Response,
+    public req: Request,
+  ) {}
+}
+
+@CommandHandler(SignInCommand)
+export class SignInHandler
+  implements ICommandHandler<SignInCommand, InterlayerNotice<SignInOutputDto>>
+{
+  constructor(
+    private readonly sharedService: SharedService,
+    private readonly usersRepository: UsersRepository,
+    private readonly configService: ConfigService<ConfigurationType, true>,
+    private readonly cookieService: CookieService,
+    private readonly sessionsRepository: SessionsRepository,
+  ) {}
+
+  async execute(
+    command: SignInCommand,
+  ): Promise<InterlayerNotice<SignInOutputDto>> {
+    const { email, password, res, req } = command;
+
+    const user = await this.usersRepository.getUserByEmailWithPass(email);
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    const isCorrectPass = await this.sharedService.validatePassword(
+      password,
+      user.password,
+    );
+
+    if (!isCorrectPass) {
+      throw new UnauthorizedException();
+    }
+
+    const deviceId = getUniqueId();
+    const userId = user.id;
+    const apiSettings = this.configService.get('apiSettings', { infer: true });
+
+    const refreshToken = await this.sharedService.getToken(userId, deviceId, {
+      expiresIn: apiSettings.REFRESH_TOKEN_EXPIRED_IN,
+    });
+
+    const accessToken = await this.sharedService.getToken(userId, deviceId, {
+      expiresIn: apiSettings.ACCESS_TOKEN_EXPIRED_IN,
+    });
+
+    const userAgentHeader = req.headers['user-agent'] || 'unknown';
+    const ipAddress = req.ip || 'unknown';
+
+    const newSession: NewSessionDto = {
+      userId,
+      ip: ipAddress,
+      title: userAgentHeader,
+      deviceId: deviceId,
+    };
+
+    await this.sessionsRepository.create(newSession);
+
+    this.cookieService.setCookie(res, COOKIE_KEY.REFRESH_TOKEN, refreshToken);
+
+    return SignInOutputMapper(accessToken);
+  }
+}
