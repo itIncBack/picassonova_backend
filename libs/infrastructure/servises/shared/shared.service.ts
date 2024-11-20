@@ -3,6 +3,7 @@ import { NodeMailer } from '@infrastructure/servises/nodemailer/nodemailer.servi
 import { JwtService } from '@nestjs/jwt';
 import { HashBuilder } from '@infrastructure/servises/hash-builder/hash-builder';
 import { JwtSignOptions } from '@nestjs/jwt/dist/interfaces';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Injectable()
 export class SharedService {
@@ -26,11 +27,27 @@ export class SharedService {
   public async getToken(
     userId: string,
     deviceId: string,
+    sessionId: string,
     options?: JwtSignOptions,
   ) {
-    const payload = { user_id: userId, device_id: deviceId };
+    const payload = {
+      user_id: userId,
+      device_id: deviceId,
+      session_id: sessionId,
+    };
 
     return await this.jwtService.signAsync(payload, options);
+  }
+
+  public verifyToken(refreshToken: string) {
+    try {
+      const { user_id, device_id, session_id } =
+        (this.jwtService.verify(refreshToken) as JwtPayload) ?? {};
+
+      return { user_id, device_id, session_id };
+    } catch (e) {
+      return null;
+    }
   }
 
   async generateConfirmationCode(

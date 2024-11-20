@@ -16,7 +16,7 @@ import { SignInInputDto } from '@apps/gateway/src/features/auth/api/dto/input/si
 import { SignInCommand } from '@apps/gateway/src/features/auth/application/handlers/sign-in.handler';
 import { Response, Request } from 'express';
 import { SignInOutputDto } from '@apps/gateway/src/features/auth/api/dto/output/sign-in.output.dto';
-import { AccessTokenSchema } from '../../../../../../swagger/schemas/success-request.schema';
+import { AccessTokenSchema } from 'swagger/schemas/success-request.schema';
 
 @ApiTags('Auth')
 @Controller('auth')

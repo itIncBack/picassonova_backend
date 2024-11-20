@@ -26,4 +26,41 @@ export class SessionsRepository {
       );
     }
   }
+
+  public async update(sessionId: string): Promise<NewSession> {
+    try {
+      return await this.prisma.session.update({
+        where: {
+          id: sessionId,
+        },
+        data: { updated_at: new Date() },
+        select: {
+          id: true,
+        },
+      });
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'Error updating session in the database',
+      );
+    }
+  }
+
+  public async getSessionByDeviceId(
+    deviceId: string,
+  ): Promise<NewSession | null> {
+    try {
+      return await this.prisma.session.findFirst({
+        where: {
+          device_id: deviceId,
+        },
+        select: {
+          id: true,
+        },
+      });
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'Error retrieving session from the database by device ID',
+      );
+    }
+  }
 }

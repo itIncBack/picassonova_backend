@@ -57,7 +57,7 @@ model Session {
   title      String
   created_at DateTime @default(now()) @db.Timestamptz()
   updated_at DateTime @updatedAt @db.Timestamptz()
-  device_id  String   @db.Uuid
+  device_id  String
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }

@@ -58,28 +58,38 @@ export class SignInHandler
     }
 
     const deviceId = getUniqueId();
-    const userId = user.id;
+
     const apiSettings = this.configService.get('apiSettings', { infer: true });
-
-    const refreshToken = await this.sharedService.getToken(userId, deviceId, {
-      expiresIn: apiSettings.REFRESH_TOKEN_EXPIRED_IN,
-    });
-
-    const accessToken = await this.sharedService.getToken(userId, deviceId, {
-      expiresIn: apiSettings.ACCESS_TOKEN_EXPIRED_IN,
-    });
 
     const userAgentHeader = req.headers['user-agent'] || 'unknown';
     const ipAddress = req.ip || 'unknown';
 
-    const newSession: NewSessionDto = {
-      userId,
+    const newSessionDto: NewSessionDto = {
+      userId: user.id,
       ip: ipAddress,
       title: userAgentHeader,
       deviceId: deviceId,
     };
 
-    await this.sessionsRepository.create(newSession);
+    const newSession = await this.sessionsRepository.create(newSessionDto);
+
+    const refreshToken = await this.sharedService.getToken(
+      user.id,
+      deviceId,
+      newSession.id,
+      {
+        expiresIn: apiSettings.REFRESH_TOKEN_EXPIRED_IN,
+      },
+    );
+
+    const accessToken = await this.sharedService.getToken(
+      user.id,
+      deviceId,
+      newSession.id,
+      {
+        expiresIn: apiSettings.ACCESS_TOKEN_EXPIRED_IN,
+      },
+    );
 
     this.cookieService.setCookie(res, COOKIE_KEY.REFRESH_TOKEN, refreshToken);
 
