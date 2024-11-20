@@ -57,10 +57,9 @@ export class SignInHandler
       throw new UnauthorizedException();
     }
 
-    const deviceId = getUniqueId();
-
     const apiSettings = this.configService.get('apiSettings', { infer: true });
 
+    const deviceId = getUniqueId();
     const userAgentHeader = req.headers['user-agent'] || 'unknown';
     const ipAddress = req.ip || 'unknown';
 
@@ -73,7 +72,7 @@ export class SignInHandler
 
     const newSession = await this.sessionsRepository.create(newSessionDto);
 
-    const refreshToken = await this.sharedService.getToken(
+    const newRefreshToken = await this.sharedService.getToken(
       user.id,
       deviceId,
       newSession.id,
@@ -82,7 +81,7 @@ export class SignInHandler
       },
     );
 
-    const accessToken = await this.sharedService.getToken(
+    const newAccessToken = await this.sharedService.getToken(
       user.id,
       deviceId,
       newSession.id,
@@ -91,8 +90,12 @@ export class SignInHandler
       },
     );
 
-    this.cookieService.setCookie(res, COOKIE_KEY.REFRESH_TOKEN, refreshToken);
+    this.cookieService.setCookie(
+      res,
+      COOKIE_KEY.REFRESH_TOKEN,
+      newRefreshToken,
+    );
 
-    return SignInOutputMapper(accessToken);
+    return SignInOutputMapper(newAccessToken);
   }
 }
