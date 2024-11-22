@@ -9,22 +9,16 @@ import {
   Res,
 } from '@nestjs/common';
 import { SignUpInputDto } from './dto/input/sign-up.input.dto';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { SignUpCommand } from '@apps/gateway/src/features/auth/application/handlers/sign-up.handler';
 import { BadRequestSchema } from 'swagger/schemas/bad-request.schema';
 import { SignInInputDto } from '@apps/gateway/src/features/auth/api/dto/input/sign-in.input.dto';
-import { SignInCommand } from '@apps/gateway/src/features/auth/application/handlers/sign-in.handler';
 import { Response, Request } from 'express';
-import { SignInOutputDto } from '@apps/gateway/src/features/auth/api/dto/output/sign-in.output.dto';
 import { AccessTokenSchema } from 'swagger/schemas/success-request.schema';
+import { AuthService } from '@apps/gateway/src/features/auth/application/auth.service';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('sign_up')
   @ApiResponse({
@@ -40,9 +34,7 @@ export class AuthController {
   async signUp(@Body() input: SignUpInputDto) {
     const { user_name, password, email } = input;
 
-    await this.commandBus.execute<SignUpCommand, void>(
-      new SignUpCommand(user_name, password, email),
-    );
+    return this.authService.signUp(user_name, password, email);
   }
 
   @Post('sign_in')
@@ -69,8 +61,6 @@ export class AuthController {
   ) {
     const { email, password } = input;
 
-    return await this.commandBus.execute<SignInCommand, SignInOutputDto>(
-      new SignInCommand(email, password, res, req),
-    );
+    return this.authService.signIn(email, password, res, req);
   }
 }

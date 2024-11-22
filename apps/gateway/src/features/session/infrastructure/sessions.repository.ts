@@ -45,13 +45,15 @@ export class SessionsRepository {
     }
   }
 
-  public async getSessionByDeviceId(
+  public async getSessionByUserAndDevice(
     deviceId: string,
+    userId: string,
   ): Promise<NewSession | null> {
     try {
       return await this.prisma.session.findFirst({
         where: {
           device_id: deviceId,
+          user_id: userId,
         },
         select: {
           id: true,

@@ -39,7 +39,9 @@ export class SharedService {
     return await this.jwtService.signAsync(payload, options);
   }
 
-  public verifyToken(refreshToken: string) {
+  public verifyToken(
+    refreshToken: string,
+  ): { user_id: string; device_id: string; session_id: string } | null {
     try {
       const { user_id, device_id, session_id } =
         (this.jwtService.verify(refreshToken) as JwtPayload) ?? {};

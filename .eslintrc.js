@@ -25,6 +25,6 @@ module.exports = {
     '@typescript-eslint/no-extra-semi': 'error', // для дополнительного контроля
     '@typescript-eslint/no-unsafe-member-access': 'warn',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    '@typescript-eslint/no-unsafe-assignment': 'error',
+    '@typescript-eslint/no-unsafe-assignment': 'warn',
   },
 };
