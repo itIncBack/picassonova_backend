@@ -46,7 +46,7 @@ export class AuthController {
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'The user already exists or the provided data is invalid.',
+    description: 'If the provided data is invalid.',
     schema: BadRequestSchema,
   })
   @ApiResponse({

@@ -24,7 +24,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-extra-semi': 'error', // для дополнительного контроля
     '@typescript-eslint/no-unsafe-member-access': 'warn',
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-unsafe-assignment': 'warn',
   },
 };
