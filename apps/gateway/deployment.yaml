@@ -72,3 +72,8 @@ spec:
                 secretKeyRef:
                   name: picassonova-gateway-production-config-secret
                   key: FILES_SERVICE_PORT
+            - name: EMAIL_CONFIRMATION_CODE_EXPIRED_IN
+              valueFrom:
+                secretKeyRef:
+                  name: picassonova-gateway-production-config-secret
+                  key: EMAIL_CONFIRMATION_CODE_EXPIRED_IN
