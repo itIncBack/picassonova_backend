@@ -9,7 +9,7 @@ import { Request, Response } from 'express';
 import {
   InterlayerNotice,
   InterlayerNoticeExtension,
-} from '@base/models/Interlayer';
+} from '@libs/base/models/Interlayer';
 
 // https://docs.nestjs.com/exception-filters
 @Catch(HttpException)

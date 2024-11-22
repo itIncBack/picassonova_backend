@@ -3,6 +3,7 @@ import { NodeMailer } from '@infrastructure/servises/nodemailer/nodemailer.servi
 import { JwtService } from '@nestjs/jwt';
 import { HashBuilder } from '@infrastructure/servises/hash-builder/hash-builder';
 import { JwtSignOptions } from '@nestjs/jwt/dist/interfaces';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Injectable()
 export class SharedService {
@@ -12,7 +13,7 @@ export class SharedService {
     protected readonly jwtService: JwtService,
   ) {}
 
-  public async isCorrectPass(
+  public async validatePassword(
     password: string,
     userPassword: string,
   ): Promise<boolean> {
@@ -23,11 +24,45 @@ export class SharedService {
     return await this.hashBuilder.hash(password);
   }
 
+  public async getToken(
+    userId: string,
+    deviceId: string,
+    sessionId: string,
+    options?: JwtSignOptions,
+  ) {
+    const payload = {
+      user_id: userId,
+      device_id: deviceId,
+      session_id: sessionId,
+    };
+
+    return await this.jwtService.signAsync(payload, options);
+  }
+
+  public verifyToken(
+    refreshToken?: string,
+  ): { user_id: string; device_id: string; session_id: string } | null {
+    try {
+      if (refreshToken) {
+        const { user_id, device_id, session_id } =
+          (this.jwtService.verify(refreshToken) as JwtPayload) ?? {};
+
+        return { user_id, device_id, session_id };
+      }
+
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   async generateConfirmationCode(
-    userName: string,
+    email: string,
     options?: JwtSignOptions,
   ): Promise<string> {
-    return await this.jwtService.signAsync({ user_name: userName }, options);
+    const payload = { email: email };
+
+    return await this.jwtService.signAsync(payload, options);
   }
 
   public async sendRegisterEmail(to: string, confirmationCode: string) {

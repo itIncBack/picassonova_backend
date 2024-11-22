@@ -9,6 +9,16 @@ export type User = {
   role: Role;
 };
 
+export type UserWithPass = {
+  id: string;
+  user_name: string;
+  email: string;
+  created_at: Date;
+  updated_at: Date;
+  role: Role;
+  password: string;
+};
+
 export type NewUser = { id: string };
 
 export type CreateUser = {
