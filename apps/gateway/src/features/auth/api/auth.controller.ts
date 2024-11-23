@@ -14,6 +14,7 @@ import { SignInInputDto } from '@apps/gateway/src/features/auth/api/dto/input/si
 import { Response, Request } from 'express';
 import { AccessTokenSchema } from 'swagger/schemas/success-request.schema';
 import { AuthService } from '@apps/gateway/src/features/auth/application/auth.service';
+import { VerifyEmailInputDto } from '@apps/gateway/src/features/auth/api/dto/input/verify-email.input.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -51,7 +52,8 @@ export class AuthController {
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: 'If the password or email is wrong',
+    description:
+      'If the password or email is incorrect, or the email is not confirmed.',
   })
   @HttpCode(HttpStatus.OK)
   async signIn(
@@ -62,5 +64,23 @@ export class AuthController {
     const { email, password } = input;
 
     return this.authService.signIn(email, password, res, req);
+  }
+
+  @Post('verify_email')
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Email was verified. Account was activated',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description:
+      'If the confirmation code is incorrect, expired or already been applied',
+    schema: BadRequestSchema,
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async verifyEmail(@Body() input: VerifyEmailInputDto) {
+    const { code } = input;
+
+    return this.authService.verifyEmail(code);
   }
 }

@@ -3,7 +3,7 @@ import { ConfirmationType } from '.prisma/client';
 import { PrismaService } from '@prisma/prisma.service';
 
 interface ICreateConfirmation {
-  user_id: string;
+  email: string;
   code: string;
   type: ConfirmationType;
 }
@@ -13,19 +13,62 @@ export class ConfirmationRepository {
   constructor(private prisma: PrismaService) {}
 
   public async createConfirmation(payload: ICreateConfirmation) {
-    const { user_id, code, type } = payload;
+    const { email, code, type } = payload;
 
     try {
       return await this.prisma.confirmation.create({
         data: {
-          user_id,
+          email,
           code,
           type: type,
         },
       });
     } catch (e) {
       throw new InternalServerErrorException(
-        'Error inserting user into database',
+        'Error creating confirmation in the database',
+      );
+    }
+  }
+
+  public async getConfirmationByCode(code: string) {
+    try {
+      return await this.prisma.confirmation.findFirst({
+        where: {
+          code,
+        },
+      });
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'Error fetching confirmation from the database',
+      );
+    }
+  }
+
+  public async getConfirmationByEmail(email: string) {
+    try {
+      return await this.prisma.confirmation.findFirst({
+        where: {
+          email,
+        },
+      });
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'Error fetching confirmation from the database',
+      );
+    }
+  }
+
+  public async updateIsConfirmed(confirmationId: string, isConfirmed: boolean) {
+    try {
+      return await this.prisma.confirmation.update({
+        where: {
+          id: confirmationId,
+        },
+        data: { is_confirmed: isConfirmed },
+      });
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'Error fetching confirmation from the database',
       );
     }
   }

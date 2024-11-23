@@ -49,6 +49,28 @@ export class UsersRepository {
     }
   }
 
+  public async getUserById(userId: string): Promise<User | null> {
+    try {
+      return await this.prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+        select: {
+          id: true,
+          user_name: true,
+          email: true,
+          created_at: true,
+          updated_at: true,
+          role: true,
+        },
+      });
+    } catch (e) {
+      throw new InternalServerErrorException(
+        'Error fetching user from database',
+      );
+    }
+  }
+
   public async getUserByEmailWithPass(
     email: string,
   ): Promise<UserWithPass | null> {

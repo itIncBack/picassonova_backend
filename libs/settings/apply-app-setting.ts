@@ -12,6 +12,7 @@ import { Application } from 'express';
 
 // Префикс нашего приложения (http://site.com/api/v1)
 export const APP_PREFIX = '/api/v1';
+export const SWAGGER_PREFIX = '/swagger_doc';
 
 export const applyAppSettings = (app: INestApplication) => {
   // Для внедрения зависимостей в validator constrain
@@ -65,7 +66,7 @@ const setAppPrefix = (app: INestApplication) => {
 };
 
 const setSwagger = (app: INestApplication) => {
-  const swaggerPath = APP_PREFIX + '/swagger_doc';
+  const swaggerPath = APP_PREFIX + SWAGGER_PREFIX;
 
   const config = new DocumentBuilder()
     .setTitle('PICASSO API')
