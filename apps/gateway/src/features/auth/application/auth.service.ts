@@ -90,32 +90,35 @@ export class AuthService {
     const hashedPassword =
       await this.sharedService.generatePasswordHash(password);
 
-    const confirmationCode = await this.sharedService.generateConfirmationCode(
-      email,
-      {
-        expiresIn: apiSettings.EMAIL_CONFIRMATION_CODE_EXPIRED_IN,
-      },
-    );
-
     const newUser = await this.usersRepository.createUser({
       user_name,
       hashedPassword,
       email,
     });
 
+    const confirmationCode = await this.sharedService.generateConfirmationCode(
+      newUser.id,
+      {
+        expiresIn: apiSettings.EMAIL_CONFIRMATION_CODE_EXPIRED_IN,
+      },
+    );
+
     await this.confirmationRepository.createConfirmation({
-      user_id: newUser.id,
+      email: email,
       code: confirmationCode,
       type: ConfirmationType.EMAIL_CONFIRMATION,
     });
 
-    await this.sharedService.sendRegisterEmail(email, confirmationCode);
+    await this.sharedService.sendVerifyEmail(email, confirmationCode);
   }
 
   async signIn(email: string, password: string, res: Response, req: Request) {
     const user = await this.usersRepository.getUserByEmailWithPass(email);
 
-    if (!user) {
+    const confirmation =
+      await this.confirmationRepository.getConfirmationByEmail(email);
+
+    if (!user || !confirmation?.is_confirmed) {
       throw new UnauthorizedException();
     }
 
@@ -195,5 +198,35 @@ export class AuthService {
     this.cookieService.setCookie(res, COOKIE_KEY.REFRESH_TOKEN, refreshToken);
 
     return SignInOutputMapper(accessToken);
+  }
+
+  async verifyEmail(code: string) {
+    const verifiedToken = this.sharedService.verifyConfirmationCode(code);
+
+    if (!verifiedToken) {
+      throw new BadRequestException({
+        message: 'Confirmation code expired',
+        key: 'code',
+      });
+    }
+
+    const confirmation =
+      await this.confirmationRepository.getConfirmationByCode(code);
+
+    if (!confirmation) {
+      throw new BadRequestException({
+        message: 'Activation code is not correct',
+        key: 'code',
+      });
+    }
+
+    if (confirmation.is_confirmed) {
+      throw new BadRequestException({
+        message: 'Email already confirmed',
+        key: 'code',
+      });
+    }
+
+    await this.confirmationRepository.updateIsConfirmed(confirmation.id, true);
   }
 }

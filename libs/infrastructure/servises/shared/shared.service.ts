@@ -4,6 +4,10 @@ import { JwtService } from '@nestjs/jwt';
 import { HashBuilder } from '@infrastructure/servises/hash-builder/hash-builder';
 import { JwtSignOptions } from '@nestjs/jwt/dist/interfaces';
 import { JwtPayload } from 'jsonwebtoken';
+import { APP_PREFIX } from '@settings/apply-app-setting';
+import { ConfigService } from '@nestjs/config';
+import { ConfigurationType } from '@settings/configuration';
+import { EnvironmentsEnum } from '@settings/env-settings';
 
 @Injectable()
 export class SharedService {
@@ -11,7 +15,12 @@ export class SharedService {
     private readonly hashBuilder: HashBuilder,
     protected readonly nodeMailer: NodeMailer,
     protected readonly jwtService: JwtService,
+    private readonly configService: ConfigService<ConfigurationType, true>,
   ) {}
+
+  private getApiSettings() {
+    return this.configService.get('apiSettings', { infer: true });
+  }
 
   public async validatePassword(
     password: string,
@@ -57,16 +66,34 @@ export class SharedService {
   }
 
   async generateConfirmationCode(
-    email: string,
+    userId: string,
     options?: JwtSignOptions,
   ): Promise<string> {
-    const payload = { email: email };
+    const payload = { user_id: userId };
 
     return await this.jwtService.signAsync(payload, options);
   }
 
-  public async sendRegisterEmail(to: string, confirmationCode: string) {
-    const link = `https://blogger-platform-bay.vercel.app/api/auth/registration-confirmation?code=${confirmationCode}`;
+  verifyConfirmationCode(token?: string): { user_id: string } | null {
+    try {
+      if (token) {
+        const { user_id } = (this.jwtService.verify(token) as JwtPayload) ?? {};
+
+        return { user_id };
+      }
+
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  public async sendVerifyEmail(to: string, confirmationCode: string) {
+    const apiSettings = this.getApiSettings();
+    const link =
+      apiSettings.ENV === EnvironmentsEnum.PRODUCTION
+        ? `https://picassonova.online${APP_PREFIX}/verify_email?code=${confirmationCode}`
+        : `http://localhost:${apiSettings.PORT}${APP_PREFIX}/verify_email?code=${confirmationCode}`;
     const subject = 'Confirm your email address';
     const text = `Please confirm your email address by clicking the following link: link`;
     const html = `<p>Please confirm your email address by clicking the link below:</p><p><a href="${link}">Confirm Email</a></p>`;
