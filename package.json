@@ -21,7 +21,8 @@
     "build:files": "nest build files",
     "start:files": "node dist/apps/files/main",
     "migrate:add": "npx prisma migrate dev --name init",
-    "migrate:deploy": "npx prisma migrate deploy"
+    "migrate:deploy": "npx prisma migrate deploy",
+    "prisma-generate": "npx prisma generate"
   },
   "dependencies": {
     "@nestjs/common": "10.4.7",
