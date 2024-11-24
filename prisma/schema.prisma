@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
@@ -15,39 +9,27 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-enum Role {
-  BASIC
-  ADMIN
-}
-
 model User {
-  id         String   @id @default(uuid()) @db.Uuid
-  user_name  String   @default("unknown_user")
-  email      String   @unique
-  password   String   @default("default_password")
-  created_at DateTime @default(now()) @db.Timestamptz()
-  updated_at DateTime @updatedAt @db.Timestamptz()
-  role       Role     @default(BASIC)
-
-  Confirmations Confirmation[]
+  id            String        @id @default(uuid()) @db.Uuid
+  email         String        @unique
+  created_at    DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime      @updatedAt @db.Timestamptz(6)
+  role          Role          @default(BASIC)
+  password      String        @default("default_password")
+  user_name     String        @default("unknown_user")
+  Confirmations Confirmation?
   Session       Session[]
-}
-
-enum ConfirmationType {
-  EMAIL_CONFIRMATION
-  RECOVERY_CODE
 }
 
 model Confirmation {
   id           String           @id @default(uuid()) @db.Uuid
-  email        String           @unique
-  code         String           @db.VarChar()
+  code         String           @db.VarChar
   type         ConfirmationType
   is_confirmed Boolean          @default(false)
-  created_at   DateTime         @default(now()) @db.Timestamptz()
-  updated_at   DateTime         @updatedAt @db.Timestamptz()
-
-  user User @relation(fields: [email], references: [email], onDelete: Cascade)
+  created_at   DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime         @updatedAt @db.Timestamptz(6)
+  email        String           @unique
+  user         User             @relation(fields: [email], references: [email], onDelete: Cascade)
 }
 
 model Session {
@@ -55,9 +37,18 @@ model Session {
   user_id    String   @db.Uuid
   ip         String
   title      String
-  created_at DateTime @default(now()) @db.Timestamptz()
-  updated_at DateTime @updatedAt @db.Timestamptz()
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @updatedAt @db.Timestamptz(6)
   device_id  String
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+enum Role {
+  BASIC
+  ADMIN
+}
+
+enum ConfirmationType {
+  EMAIL_CONFIRMATION
+  RECOVERY_CODE
 }
