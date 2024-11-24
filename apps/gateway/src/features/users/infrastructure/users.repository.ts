@@ -21,6 +21,9 @@ export class UsersRepository {
         },
       });
     } catch (e) {
+      console.error('Error inserting user into database:', {
+        error: (e as Error).message,
+      });
       throw new InternalServerErrorException(
         'Error inserting user into database',
       );
@@ -43,6 +46,9 @@ export class UsersRepository {
         },
       });
     } catch (e) {
+      console.error('Error fetching user from database:', {
+        error: (e as Error).message,
+      });
       throw new InternalServerErrorException(
         'Error fetching user from database',
       );
@@ -65,6 +71,9 @@ export class UsersRepository {
         },
       });
     } catch (e) {
+      console.error('Error fetching user from database: ', {
+        error: (e as Error).message,
+      });
       throw new InternalServerErrorException(
         'Error fetching user from database',
       );
@@ -90,6 +99,9 @@ export class UsersRepository {
         },
       });
     } catch (e) {
+      console.error('Error fetching user from database: ', {
+        error: (e as Error).message,
+      });
       throw new InternalServerErrorException(
         'Error fetching user from database',
       );

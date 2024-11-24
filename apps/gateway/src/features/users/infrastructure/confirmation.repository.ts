@@ -24,6 +24,9 @@ export class ConfirmationRepository {
         },
       });
     } catch (e) {
+      console.error('Error creating confirmation:', {
+        error: (e as Error).message,
+      });
       throw new InternalServerErrorException(
         'Error creating confirmation in the database',
       );
@@ -38,6 +41,10 @@ export class ConfirmationRepository {
         },
       });
     } catch (e) {
+      console.error('Error fetching confirmation by code:', {
+        error: (e as Error).message,
+        code,
+      });
       throw new InternalServerErrorException(
         'Error fetching confirmation from the database',
       );
@@ -52,6 +59,9 @@ export class ConfirmationRepository {
         },
       });
     } catch (e) {
+      console.error('Error fetching confirmation by email:', {
+        error: (e as Error).message,
+      });
       throw new InternalServerErrorException(
         'Error fetching confirmation from the database',
       );
@@ -67,6 +77,9 @@ export class ConfirmationRepository {
         data: { is_confirmed: isConfirmed },
       });
     } catch (e) {
+      console.error('Error updating is_confirmed status:', {
+        error: (e as Error).message,
+      });
       throw new InternalServerErrorException(
         'Error fetching confirmation from the database',
       );

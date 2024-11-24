@@ -21,6 +21,9 @@ export class SessionsRepository {
         },
       });
     } catch (e) {
+      console.error('Error inserting session into database:', {
+        error: (e as Error).message,
+      });
       throw new InternalServerErrorException(
         'Error inserting session into database',
       );
@@ -39,6 +42,9 @@ export class SessionsRepository {
         },
       });
     } catch (e) {
+      console.error('Error updating session in the database:', {
+        error: (e as Error).message,
+      });
       throw new InternalServerErrorException(
         'Error updating session in the database',
       );
@@ -60,6 +66,12 @@ export class SessionsRepository {
         },
       });
     } catch (e) {
+      console.error(
+        'Error retrieving session from the database by device ID:',
+        {
+          error: (e as Error).message,
+        },
+      );
       throw new InternalServerErrorException(
         'Error retrieving session from the database by device ID',
       );
