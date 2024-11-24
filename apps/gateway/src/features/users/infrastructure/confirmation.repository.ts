@@ -85,4 +85,22 @@ export class ConfirmationRepository {
       );
     }
   }
+
+  public async updateConfirmationCode(confirmationId: string, code: string) {
+    try {
+      return await this.prisma.confirmation.update({
+        where: {
+          id: confirmationId,
+        },
+        data: { code: code },
+      });
+    } catch (e) {
+      console.error('Error updating is_confirmed status:', {
+        error: (e as Error).message,
+      });
+      throw new InternalServerErrorException(
+        'Error fetching confirmation from the database',
+      );
+    }
+  }
 }

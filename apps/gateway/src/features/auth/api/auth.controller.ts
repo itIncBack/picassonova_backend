@@ -15,6 +15,7 @@ import { Response, Request } from 'express';
 import { AccessTokenSchema } from 'swagger/schemas/success-request.schema';
 import { AuthService } from '@apps/gateway/src/features/auth/application/auth.service';
 import { VerifyEmailInputDto } from '@apps/gateway/src/features/auth/api/dto/input/verify-email.input.dto';
+import { ResendVerificationEmailInputDto } from '@apps/gateway/src/features/auth/api/dto/input/resend-verification-email.input.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -82,5 +83,25 @@ export class AuthController {
     const { code } = input;
 
     return this.authService.verifyEmail(code);
+  }
+
+  @Post('resend_verification_email')
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description:
+      'Input data is accepted.Email with confirmation code will be send to passed email address.Confirmation code should be inside link as query param, for example: https://some-front.com/confirm-registration?code=youtcodehere',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'If the email has incorrect value',
+    schema: BadRequestSchema,
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async resendVerificationEmail(
+    @Body() input: ResendVerificationEmailInputDto,
+  ) {
+    const { email } = input;
+
+    return this.authService.resendVerificationEmail(email);
   }
 }

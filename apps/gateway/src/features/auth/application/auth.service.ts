@@ -229,4 +229,38 @@ export class AuthService {
 
     await this.confirmationRepository.updateIsConfirmed(confirmation.id, true);
   }
+
+  async resendVerificationEmail(email: string) {
+    const user = await this.usersRepository.getUserByEmail(email);
+    const apiSettings = this.getApiSettings();
+
+    if (!user) {
+      throw new BadRequestException({
+        message: 'Email not found',
+      });
+    }
+
+    const confirmation =
+      await this.confirmationRepository.getConfirmationByEmail(email);
+
+    if (!confirmation || confirmation?.is_confirmed) {
+      throw new BadRequestException({
+        message: 'Email already confirmed',
+      });
+    }
+
+    const confirmationCode = await this.sharedService.generateConfirmationCode(
+      user.id,
+      {
+        expiresIn: apiSettings.EMAIL_CONFIRMATION_CODE_EXPIRED_IN,
+      },
+    );
+
+    await this.confirmationRepository.updateConfirmationCode(
+      confirmation.id,
+      confirmationCode,
+    );
+
+    await this.sharedService.sendVerifyEmail(email, confirmationCode);
+  }
 }
