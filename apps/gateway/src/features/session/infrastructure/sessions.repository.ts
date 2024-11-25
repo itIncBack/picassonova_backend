@@ -18,6 +18,8 @@ export class SessionsRepository {
         },
         select: {
           id: true,
+          device_id: true,
+          user_id: true,
         },
       });
     } catch (e) {
@@ -39,6 +41,8 @@ export class SessionsRepository {
         data: { updated_at: new Date() },
         select: {
           id: true,
+          device_id: true,
+          user_id: true,
         },
       });
     } catch (e) {
@@ -63,6 +67,8 @@ export class SessionsRepository {
         },
         select: {
           id: true,
+          device_id: true,
+          user_id: true,
         },
       });
     } catch (e) {
@@ -74,6 +80,27 @@ export class SessionsRepository {
       );
       throw new InternalServerErrorException(
         'Error retrieving session from the database by device ID',
+      );
+    }
+  }
+
+  public async deleteSessionByUserAndDevice(
+    deviceId: string,
+    userId: string,
+  ): Promise<void> {
+    try {
+      await this.prisma.session.deleteMany({
+        where: {
+          device_id: deviceId,
+          user_id: userId,
+        },
+      });
+    } catch (e) {
+      console.error('Error deleting session from the database:', {
+        error: (e as Error).message,
+      });
+      throw new InternalServerErrorException(
+        'Error deleting session from the database',
       );
     }
   }

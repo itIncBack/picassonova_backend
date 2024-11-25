@@ -165,13 +165,11 @@ export class AuthService {
 
         return SignInOutputMapper(accessToken);
       } else {
-        const deviceId = getUniqueId();
-
         const newSession = await this.createSession(user.id, req);
 
         const { accessToken, refreshToken } = await this.generateTokens(
-          user.id,
-          deviceId,
+          newSession.user_id,
+          newSession.device_id,
           newSession.id,
         );
 
@@ -185,13 +183,11 @@ export class AuthService {
       }
     }
 
-    const deviceId = getUniqueId();
-
     const newSession = await this.createSession(user.id, req);
 
     const { accessToken, refreshToken } = await this.generateTokens(
-      user.id,
-      deviceId,
+      newSession.user_id,
+      newSession.device_id,
       newSession.id,
     );
 
@@ -262,5 +258,29 @@ export class AuthService {
     );
 
     await this.sharedService.sendVerifyEmail(email, confirmationCode);
+  }
+
+  async logout(req: Request, res: Response) {
+    const refreshToken = this.cookieService.getCookie(
+      req,
+      COOKIE_KEY.REFRESH_TOKEN,
+    );
+
+    if (!refreshToken) {
+      throw new UnauthorizedException();
+    }
+
+    const verifiedToken = this.sharedService.verifyToken(refreshToken);
+
+    if (!verifiedToken) {
+      throw new UnauthorizedException();
+    }
+
+    await this.sessionsRepository.deleteSessionByUserAndDevice(
+      verifiedToken.device_id,
+      verifiedToken.user_id,
+    );
+
+    this.cookieService.clearCookie(res, COOKIE_KEY.REFRESH_TOKEN);
   }
 }

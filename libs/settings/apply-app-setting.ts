@@ -70,8 +70,16 @@ const setSwagger = (app: INestApplication) => {
 
   const config = new DocumentBuilder()
     .setTitle('PICASSO API')
-    // .addBearerAuth()
+    .setDescription('This API uses cookies for refresh token authentication.')
+    .addBearerAuth()
     .setVersion('1.0')
+    .addSecurity('refreshToken', {
+      type: 'apiKey',
+      name: 'refreshToken',
+      in: 'cookie',
+      description:
+        'JWT refreshToken inside cookie. Must be correct, and must not expire.', // Дополнительная информация
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

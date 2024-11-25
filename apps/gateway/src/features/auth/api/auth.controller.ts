@@ -1,4 +1,9 @@
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -23,6 +28,11 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('sign_up')
+  @ApiOperation({
+    summary: 'Registration',
+    description:
+      'Registration in the system. Email with confirmation code will be send to passed email address',
+  })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
     description: 'Successfully sign_up the user. No content is returned.',
@@ -40,6 +50,10 @@ export class AuthController {
   }
 
   @Post('sign_in')
+  @ApiOperation({
+    summary: 'Login',
+    description: 'Try login user to the system',
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     schema: AccessTokenSchema,
@@ -68,6 +82,10 @@ export class AuthController {
   }
 
   @Post('verify_email')
+  @ApiOperation({
+    summary: 'Confirmation',
+    description: 'Confirm registration',
+  })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
     description: 'Email was verified. Account was activated',
@@ -86,6 +104,10 @@ export class AuthController {
   }
 
   @Post('resend_verification_email')
+  @ApiOperation({
+    summary: 'Resend confirmation',
+    description: 'Resend confirmation registration Email if user exists',
+  })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
     description:
@@ -103,5 +125,25 @@ export class AuthController {
     const { email } = input;
 
     return this.authService.resendVerificationEmail(email);
+  }
+
+  @Post('logout')
+  @ApiSecurity('refreshToken')
+  @ApiOperation({
+    summary: 'Logout',
+    description:
+      'Logs out the user by invalidating the refresh token stored in the cookies.',
+  })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'No Content',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    return this.authService.logout(req, res);
   }
 }
