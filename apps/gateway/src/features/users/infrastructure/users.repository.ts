@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { PrismaService } from '@prisma/prisma.service';
+import { PrismaService } from '@apps/gateway/prisma/prisma.service';
 import { CreateUser, NewUser, User, UserWithPass } from './types';
 
 @Injectable()

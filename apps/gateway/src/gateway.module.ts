@@ -13,7 +13,7 @@ import { LoggerMiddleware } from '@infrastructure/middlewares/logger.middleware'
 import { CqrsModule } from '@nestjs/cqrs';
 import * as process from 'process';
 import { config } from 'dotenv';
-import { PrismaModule } from '@prisma/prisma.module';
+import { PrismaModule } from '@apps/gateway/prisma/prisma.module';
 import { UsersModule } from '@apps/gateway/src/features/users/users.module';
 import { AuthModule } from '@apps/gateway/src/features/auth/auth.module';
 import { SharedModule } from '@libs/modules/shared.module';
