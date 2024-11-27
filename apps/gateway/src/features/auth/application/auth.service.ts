@@ -266,10 +266,6 @@ export class AuthService {
       COOKIE_KEY.REFRESH_TOKEN,
     );
 
-    if (!refreshToken) {
-      throw new UnauthorizedException();
-    }
-
     const verifiedToken = this.sharedService.verifyToken(refreshToken);
 
     if (!verifiedToken) {
