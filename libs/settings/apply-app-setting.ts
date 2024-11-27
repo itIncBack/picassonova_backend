@@ -12,7 +12,7 @@ import { Application } from 'express';
 
 // Префикс нашего приложения (http://site.com/api/v1)
 export const APP_PREFIX = '/api/v1';
-export const SWAGGER_PREFIX = '/swagger_doc';
+export const SWAGGER_PREFIX = '/swagger-doc';
 
 export const applyAppSettings = (app: INestApplication) => {
   // Для внедрения зависимостей в validator constrain

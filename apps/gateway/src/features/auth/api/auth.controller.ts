@@ -25,7 +25,7 @@ import { ApiLogoutDocs } from '@apps/gateway/src/features/auth/decorators/api-lo
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('sign_up')
+  @Post('sign-up')
   @ApiSignUpDocs()
   @HttpCode(HttpStatus.NO_CONTENT)
   async signUp(@Body() input: SignUpInputDto) {
@@ -34,7 +34,7 @@ export class AuthController {
     return this.authService.signUp(user_name, password, email);
   }
 
-  @Post('sign_in')
+  @Post('sign-in')
   @ApiSignInDocs()
   @HttpCode(HttpStatus.OK)
   async signIn(
@@ -47,7 +47,7 @@ export class AuthController {
     return this.authService.signIn(email, password, res, req);
   }
 
-  @Post('verify_email')
+  @Post('verify-email')
   @ApiVerifyEmailDocs()
   @HttpCode(HttpStatus.NO_CONTENT)
   async verifyEmail(@Body() input: VerifyEmailInputDto) {
@@ -56,7 +56,7 @@ export class AuthController {
     return this.authService.verifyEmail(code);
   }
 
-  @Post('resend_verification_email')
+  @Post('resend-verification-email')
   @ApiResendVerificationEmailDocs()
   @HttpCode(HttpStatus.NO_CONTENT)
   async resendVerificationEmail(
