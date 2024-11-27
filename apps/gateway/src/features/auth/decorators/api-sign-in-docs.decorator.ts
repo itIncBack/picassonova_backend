@@ -1,8 +1,9 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AccessTokenSchema, BadRequestSchema } from './schemas'; // Импортируйте ваши схемы
+import { AccessTokenSchema } from '../swagger/schemas/success-request.schema';
+import { BadRequestSchema } from '../swagger/schemas/bad-request.schema';
 
-export function ApiLoginDocs() {
+export function ApiSignInDocs() {
   return applyDecorators(
     ApiOperation({
       summary: 'Login',
