@@ -10,6 +10,7 @@ export class SignInInputDto {
   @ApiProperty({
     description: 'User email',
     example: 'example@gmail.com',
+    required: true,
   })
   @isEmail()
   email: string;
@@ -22,6 +23,7 @@ export class SignInInputDto {
     example: 'rwrwerweQ3234',
     minLength: PASSWORD_MIN_LENGTH,
     maxLength: PASSWORD_MAX_LENGTH,
+    required: true,
   })
   @IsPasswordDecorator()
   password: string;

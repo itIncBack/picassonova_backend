@@ -5,6 +5,7 @@ export class ResendVerificationEmailInputDto {
   @ApiProperty({
     description: 'User email',
     example: 'example@gmail.com',
+    required: true,
   })
   @isEmail()
   email: string;

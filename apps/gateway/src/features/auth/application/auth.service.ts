@@ -16,6 +16,7 @@ import { SignInOutputMapper } from '@apps/gateway/src/features/auth/api/dto/outp
 import { SessionsRepository } from '@apps/gateway/src/features/session/infrastructure/sessions.repository';
 import { CookieService } from '@infrastructure/servises/cookie/cookie.service';
 import { NewSession } from '@apps/gateway/src/features/session/infrastructure/types';
+import { ReCaptchaService } from '@infrastructure/servises/re-captcha/re-captcha.service';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +27,7 @@ export class AuthService {
     private readonly usersRepository: UsersRepository,
     private readonly sessionsRepository: SessionsRepository,
     private readonly cookieService: CookieService,
+    private readonly recaptchaService: ReCaptchaService,
   ) {}
 
   private getApiSettings() {
@@ -104,9 +106,9 @@ export class AuthService {
     );
 
     await this.confirmationRepository.createConfirmation({
-      email: email,
+      userId: newUser.id,
       code: confirmationCode,
-      type: ConfirmationType.EMAIL_CONFIRMATION,
+      type: ConfirmationType.EMAIL_VERIFICATION,
     });
 
     await this.sharedService.sendVerifyEmail(email, confirmationCode);
@@ -115,10 +117,17 @@ export class AuthService {
   async signIn(email: string, password: string, res: Response, req: Request) {
     const user = await this.usersRepository.getUserByEmailWithPass(email);
 
-    const confirmation =
-      await this.confirmationRepository.getConfirmationByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
 
-    if (!user || !confirmation?.is_confirmed) {
+    const confirmation =
+      await this.confirmationRepository.getConfirmationUserIdAndType(
+        user.id,
+        ConfirmationType.EMAIL_VERIFICATION,
+      );
+
+    if (!confirmation?.is_confirmed) {
       throw new UnauthorizedException();
     }
 
@@ -237,7 +246,10 @@ export class AuthService {
     }
 
     const confirmation =
-      await this.confirmationRepository.getConfirmationByEmail(email);
+      await this.confirmationRepository.getConfirmationUserIdAndType(
+        user.id,
+        ConfirmationType.EMAIL_VERIFICATION,
+      );
 
     if (!confirmation || confirmation?.is_confirmed) {
       throw new BadRequestException({
@@ -278,5 +290,34 @@ export class AuthService {
     );
 
     this.cookieService.clearCookie(res, COOKIE_KEY.REFRESH_TOKEN);
+  }
+
+  async passwordRecovery(email: string, recaptcha_token: string) {
+    await this.recaptchaService.validate(recaptcha_token);
+
+    const user = await this.usersRepository.getUserByEmail(email);
+    const apiSettings = this.getApiSettings();
+
+    if (!user) {
+      throw new BadRequestException({
+        message: "User with this email doesn't exist",
+        key: 'email',
+      });
+    }
+
+    const confirmationCode = await this.sharedService.generateConfirmationCode(
+      user.id,
+      {
+        expiresIn: apiSettings.EMAIL_CONFIRMATION_CODE_EXPIRED_IN,
+      },
+    );
+
+    await this.confirmationRepository.upsertConfirmation({
+      userId: user.id,
+      code: confirmationCode,
+      type: ConfirmationType.PASSWORD_RECOVERY,
+    });
+
+    await this.sharedService.sendRecoveryPassEmail(email, confirmationCode);
   }
 }

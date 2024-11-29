@@ -19,6 +19,8 @@ import { ApiSignUpDocs } from '@apps/gateway/src/features/auth/decorators/api-si
 import { ApiVerifyEmailDocs } from '@apps/gateway/src/features/auth/decorators/api-verify-email-docs.decorator';
 import { ApiResendVerificationEmailDocs } from '@apps/gateway/src/features/auth/decorators/api-resend-verification-email-docs.decorator';
 import { ApiLogoutDocs } from '@apps/gateway/src/features/auth/decorators/api-logout-docs.decorator';
+import { PasswordRecoveryDto } from '@apps/gateway/src/features/auth/api/dto/input/password-recovery.input.dto';
+import { ApiPasswordRecoveryDocs } from '@apps/gateway/src/features/auth/decorators/api-password-recovery-docs.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -72,5 +74,14 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     return this.authService.logout(req, res);
+  }
+
+  @Post('password-recovery')
+  @ApiPasswordRecoveryDocs()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async passwordRecovery(@Body() input: PasswordRecoveryDto) {
+    const { email, recaptcha_token } = input;
+
+    await this.authService.passwordRecovery(email, recaptcha_token);
   }
 }
