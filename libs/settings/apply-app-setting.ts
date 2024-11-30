@@ -9,7 +9,6 @@ import { useContainer } from 'class-validator';
 import cookieParser from 'cookie-parser';
 import { GatewayModule } from '@apps/gateway/src/gateway.module';
 import { Application } from 'express';
-import { CORS_WHITE_LIST } from '@libs/utils/consts';
 
 // Префикс нашего приложения (http://site.com/api/v1)
 export const APP_PREFIX = '/api/v1';
@@ -50,16 +49,7 @@ export const applyAppSettings = (app: INestApplication) => {
 };
 
 const setEnableCors = (app: INestApplication) => {
-  app.enableCors({
-    origin: (origin, callback) => {
-      if (CORS_WHITE_LIST.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-  });
+  app.enableCors();
 };
 
 const setAppProxy = (app: INestApplication) => {
