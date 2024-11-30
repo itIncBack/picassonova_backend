@@ -37,4 +37,4 @@ RUN npm run build:${SERVICE}
 EXPOSE ${PORT}
 
 CMD npm run migrate:add && npm run migrate:deploy && npm run prisma-generate && npm run start:gateway
-#CMD npm run 'start:gateway'
+

@@ -5,6 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class VerifyEmailInputDto {
   @ApiProperty({
     description: 'Code that be sent via Email inside link',
+    required: true,
   })
   @IsNotEmpty({ message: 'Code is required' })
   @IsString({ message: 'Code must be a string' })

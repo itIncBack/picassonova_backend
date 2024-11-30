@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>reCAPTCHA v3 Test</title>
+  <!-- Подключение скрипта reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfdoY0qAAAAAPHtDMsLzB9MFrTcTJdRXEI6KHpP"></script>
+</head>
+<body>
+    <h1>reCAPTCHA v3 Test Form</h1>
+    <form id="testForm">
+      
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br><br>
+      
+      <!-- Скрытое поле для токена reCAPTCHA -->
+        <input type="hidden" id="recaptcha_token" name="recaptcha_token">
+        
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="result" style="margin-top: 20px; font-weight: bold;"></div>
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async function(event) {
+          event.preventDefault(); // Останавливаем отправку формы
+          
+          const email = document.getElementById('email').value;
+          // Генерация токена reCAPTCHA
+          grecaptcha.ready(async function() {
+            const token = await grecaptcha.execute('6LfdoY0qAAAAAPHtDMsLzB9MFrTcTJdRXEI6KHpP', {action: 'submit'});
+            
+            const payload = {
+              email,
+              recaptcha_token: token,
+            };
+      
+            // Отправляем данные на сервер
+            try {
+              const response = await fetch('http://localhost:3001/api/v1/auth/password-recovery', { // Укажите URL вашего сервера
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+              });
+              
+              const result = await response.json();
+              
+              if (result.success && result.score >= 0.5) { // Проверка "score" на сервере
+                document.getElementById('result').innerText = 'Form submitted successfully!';
+              } else {
+                document.getElementById('result').innerText = 'reCAPTCHA validation failed. Please try again.';
+              }
+            } catch (error) {
+              document.getElementById('result').innerText = 'An error occurred. Please try again later.';
+              console.error(error);
+            }
+          });
+        });
+    </script>
+</body>
+</html>
+
+

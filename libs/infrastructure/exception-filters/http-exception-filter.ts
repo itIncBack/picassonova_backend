@@ -1,17 +1,16 @@
 import {
-  ArgumentsHost,
-  Catch,
   ExceptionFilter,
+  Catch,
+  ArgumentsHost,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response, Request } from 'express';
 import {
   InterlayerNotice,
   InterlayerNoticeExtension,
 } from '@libs/base/models/Interlayer';
 
-// https://docs.nestjs.com/exception-filters
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
   catch(exception: HttpException, host: ArgumentsHost) {
@@ -20,30 +19,22 @@ export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    const notice = new InterlayerNotice<null>(null); // Создаем новый экземпляр InterlayerNotice
+    const notice = new InterlayerNotice<null>(null);
 
-    if (status === HttpStatus.BAD_REQUEST) {
-      const responseBody: any = exception.getResponse();
+    const responseBody: any = exception.getResponse();
+    const isResponseObject = typeof responseBody === 'object';
+    const messages = Array.isArray(responseBody?.message)
+      ? responseBody.message
+      : [responseBody?.message || 'An unexpected error occurred'];
 
-      if (Array.isArray(responseBody.message)) {
-        responseBody.message.forEach((e) => {
-          notice.extensions.push(
-            new InterlayerNoticeExtension(e.message, e.key),
-          );
-        });
-      } else if (typeof responseBody === 'object') {
-        notice.extensions.push(
-          new InterlayerNoticeExtension(responseBody.message, responseBody.key),
-        );
-      } else {
-        notice.extensions.push(
-          new InterlayerNoticeExtension(responseBody.message, null),
-        );
-      }
+    messages.forEach((message) => {
+      const key = isResponseObject ? responseBody.key : null;
+      notice.extensions.push(new InterlayerNoticeExtension(message, key));
+    });
 
-      notice.code = status; // Устанавливаем код ошибки
-      response.status(status).json(notice); // Возвращаем InterlayerNotice в ответе
-    } else {
+    notice.code = status;
+
+    if (![HttpStatus.BAD_REQUEST, HttpStatus.FORBIDDEN].includes(status)) {
       notice.addError('An error occurred', null, status);
       notice.extensions.push(
         new InterlayerNoticeExtension(
@@ -51,8 +42,8 @@ export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
           `Status: ${status}, Path: ${request.url}, Timestamp: ${new Date().toISOString()}`,
         ),
       );
-
-      response.status(status).json(notice); // Возвращаем InterlayerNotice в ответе
     }
+
+    response.status(status).json(notice);
   }
 }

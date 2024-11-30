@@ -43,4 +43,13 @@ export class APISettings {
   @IsString()
   public readonly REFRESH_TOKEN_EXPIRED_IN: string =
     this.envVariables.REFRESH_TOKEN_EXPIRED_IN;
+
+  //GOOGLE_RECAPTCHA
+  @IsString()
+  public readonly GOOGLE_RECAPTCHA_SECRET_KEY: string =
+    this.envVariables.GOOGLE_RECAPTCHA_SECRET_KEY;
+
+  @IsString()
+  public readonly GOOGLE_RECAPTCHA_SITE_KEY: string =
+    this.envVariables.GOOGLE_RECAPTCHA_SECRET_KEY;
 }
