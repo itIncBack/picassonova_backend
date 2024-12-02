@@ -53,3 +53,4 @@ enum ConfirmationType {
   EMAIL_VERIFICATION
   PASSWORD_RECOVERY
 }
+//"prisma-generate": "npx prisma generate --schema=apps/gateway/prisma/schema.prisma",
