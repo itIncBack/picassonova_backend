@@ -26,7 +26,6 @@ WORKDIR /home/node/dist/${SERVICE}
 COPY --chown=node package*.json ./
 
 RUN npm install
-RUN npm run prisma-generate
 
 # Bundle app source code
 COPY --chown=node . .
@@ -37,5 +36,5 @@ RUN npm run build:${SERVICE}
 
 EXPOSE ${PORT}
 
-CMD npm run migrate:add && npm run migrate:deploy && npm run start:gateway
+CMD npm run migrate:add && npm run migrate:deploy && npm run prisma-generate && npm run start:gateway
 
