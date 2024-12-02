@@ -16,7 +16,7 @@ import { SessionsRepository } from '@apps/gateway/src/features/session/infrastru
 import { CookieService } from '@infrastructure/servises/cookie/cookie.service';
 import { NewSession } from '@apps/gateway/src/features/session/infrastructure/types';
 import { ReCaptchaService } from '@infrastructure/servises/re-captcha/re-captcha.service';
-import { ConfirmationType } from '.prisma/client';
+import { ConfirmationType } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
