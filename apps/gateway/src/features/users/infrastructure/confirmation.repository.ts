@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '@apps/gateway/prisma/prisma.service';
 import { ConfirmationType } from '@prisma/client';
-
+//"@prisma/client": ["node_modules/@prisma/client"]
 interface ICreateConfirmation {
   userId: string;
   code: string;
