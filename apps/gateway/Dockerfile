@@ -25,7 +25,7 @@ WORKDIR /home/node/dist/${SERVICE}
 
 COPY --chown=node package*.json ./
 
-RUN npm install --frozen-lockfile
+RUN npm install
 
 # Генерация клиента Prisma перед сборкой
 RUN npx prisma generate --schema=./apps/gateway/prisma/schema.prisma
