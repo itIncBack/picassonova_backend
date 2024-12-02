@@ -28,7 +28,7 @@ COPY --chown=node package*.json ./
 RUN npm install --frozen-lockfile
 
 # Генерация клиента Prisma перед сборкой
-RUN npx prisma generate --schema=apps/gateway/prisma/schema.prisma
+RUN npx prisma generate --schema=./apps/gateway/prisma/schema.prisma
 
 # Bundle app source code
 COPY --chown=node . .
