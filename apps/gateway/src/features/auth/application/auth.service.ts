@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '@settings/configuration';
-import { ConfirmationType } from '.prisma/client';
 import { UsersRepository } from '@apps/gateway/src/features/users/infrastructure/users.repository';
 import { SharedService } from '@infrastructure/servises/shared/shared.service';
 import { ConfirmationRepository } from '@apps/gateway/src/features/users/infrastructure/confirmation.repository';
@@ -17,6 +16,7 @@ import { SessionsRepository } from '@apps/gateway/src/features/session/infrastru
 import { CookieService } from '@infrastructure/servises/cookie/cookie.service';
 import { NewSession } from '@apps/gateway/src/features/session/infrastructure/types';
 import { ReCaptchaService } from '@infrastructure/servises/re-captcha/re-captcha.service';
+import { ConfirmationType } from '.prisma/client';
 
 @Injectable()
 export class AuthService {
