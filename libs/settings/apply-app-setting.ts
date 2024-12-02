@@ -9,6 +9,7 @@ import { useContainer } from 'class-validator';
 import cookieParser from 'cookie-parser';
 import { GatewayModule } from '@apps/gateway/src/gateway.module';
 import { Application } from 'express';
+import { log } from 'node:util';
 
 // Префикс нашего приложения (http://site.com/api/v1)
 export const APP_PREFIX = '/api/v1';
@@ -49,7 +50,22 @@ export const applyAppSettings = (app: INestApplication) => {
 };
 
 const setEnableCors = (app: INestApplication) => {
-  app.enableCors();
+  const allowedOrigins = [
+    'http://localhost:3000', // Локальная разработка
+    'https://picassonova.online', // Тестовый стенд
+  ];
+
+  app.enableCors({
+    origin: (origin, callback) => {
+      console.log('origin', origin);
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true); // Разрешить запрос
+      } else {
+        callback(new Error('Not allowed by CORS')); // Запретить запрос
+      }
+    },
+    credentials: true,
+  });
 };
 
 const setAppProxy = (app: INestApplication) => {

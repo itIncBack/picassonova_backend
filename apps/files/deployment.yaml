@@ -77,3 +77,13 @@ spec:
                  secretKeyRef:
                    name: picassonova-gateway-production-config-secret
                    key: EMAIL_CONFIRMATION_CODE_EXPIRED_IN
+             - name: GOOGLE_RECAPTCHA_SECRET_KEY
+               valueFrom:
+                 secretKeyRef:
+                   name: picassonova-gateway-production-config-secret
+                   key: GOOGLE_RECAPTCHA_SECRET_KEY
+             - name: GOOGLE_RECAPTCHA_SITE_KEY
+               valueFrom:
+                 secretKeyRef:
+                   name: picassonova-gateway-production-config-secret
+                   key: GOOGLE_RECAPTCHA_SITE_KEY

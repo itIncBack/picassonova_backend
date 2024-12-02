@@ -4,21 +4,21 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model User {
-  id            String        @id @default(uuid()) @db.Uuid
-  email         String        @unique
-  created_at    DateTime      @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime      @updatedAt @db.Timestamptz(6)
-  role          Role          @default(BASIC)
-  password      String        @default("default_password")
-  user_name     String        @default("unknown_user")
-  Confirmations Confirmation?
-  Session       Session[]
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique
+  created_at    DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime       @updatedAt @db.Timestamptz(6)
+  role          Role           @default(BASIC)
+  password      String         @default("default_password")
+  user_name     String         @default("unknown_user")
+  Confirmations Confirmation[]
+  Sessions      Session[]
 }
 
 model Confirmation {
@@ -28,8 +28,8 @@ model Confirmation {
   is_confirmed Boolean          @default(false)
   created_at   DateTime         @default(now()) @db.Timestamptz(6)
   updated_at   DateTime         @updatedAt @db.Timestamptz(6)
-  email        String           @unique
-  user         User             @relation(fields: [email], references: [email], onDelete: Cascade)
+  user_id      String           @db.Uuid
+  user         User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model Session {
@@ -49,6 +49,6 @@ enum Role {
 }
 
 enum ConfirmationType {
-  EMAIL_CONFIRMATION
-  RECOVERY_CODE
+  EMAIL_VERIFICATION
+  PASSWORD_RECOVERY
 }

@@ -1,9 +1,9 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { PrismaService } from '@prisma/prisma.service';
 import { ConfirmationType } from '.prisma/client';
-import { PrismaService } from '@apps/gateway/prisma/prisma.service';
 
 interface ICreateConfirmation {
-  email: string;
+  userId: string;
   code: string;
   type: ConfirmationType;
 }
@@ -13,14 +13,14 @@ export class ConfirmationRepository {
   constructor(private prisma: PrismaService) {}
 
   public async createConfirmation(payload: ICreateConfirmation) {
-    const { email, code, type } = payload;
+    const { userId, code, type } = payload;
 
     try {
       return await this.prisma.confirmation.create({
         data: {
-          email,
+          user_id: userId,
           code,
-          type: type,
+          type,
         },
       });
     } catch (e) {
@@ -29,6 +29,41 @@ export class ConfirmationRepository {
       });
       throw new InternalServerErrorException(
         'Error creating confirmation in the database',
+      );
+    }
+  }
+
+  public async upsertConfirmation(payload: ICreateConfirmation) {
+    const { userId, code, type } = payload;
+
+    try {
+      // Try to update an existing confirmation
+      const updateResult = await this.prisma.confirmation.updateMany({
+        where: { user_id: userId, type },
+        data: { code },
+      });
+
+      // If an update was performed (record exists), return true
+      if (updateResult.count > 0) {
+        return { updated: true };
+      }
+
+      // If no record was updated, create a new confirmation
+      const newConfirmation = await this.prisma.confirmation.create({
+        data: {
+          user_id: userId,
+          code,
+          type,
+        },
+      });
+
+      return { created: true, confirmation: newConfirmation };
+    } catch (e) {
+      console.error('Error upserting confirmation:', {
+        error: (e as Error).message,
+      });
+      throw new InternalServerErrorException(
+        'Error upserting confirmation in the database',
       );
     }
   }
@@ -51,11 +86,15 @@ export class ConfirmationRepository {
     }
   }
 
-  public async getConfirmationByEmail(email: string) {
+  public async getConfirmationUserIdAndType(
+    userId: string,
+    confirmationType: ConfirmationType,
+  ) {
     try {
       return await this.prisma.confirmation.findFirst({
         where: {
-          email,
+          user_id: userId,
+          type: confirmationType,
         },
       });
     } catch (e) {
