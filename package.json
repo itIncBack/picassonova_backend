@@ -20,10 +20,10 @@
     "start:gateway": "node dist/apps/gateway/main",
     "build:files": "nest build files",
     "start:files": "node dist/apps/files/main",
-    "migrate:add": "npx prisma migrate dev --name init --schema=apps/gateway/prisma/schema.prisma",
-    "migrate:deploy": "npx prisma migrate deploy --schema=apps/gateway/prisma/schema.prisma",
-    "prisma-generate": "npx prisma generate --schema=apps/gateway/prisma/schema.prisma",
-    "prisma-studio": "npx prisma studio --schema=apps/gateway/prisma/schema.prisma"
+    "migrate:add": "npx prisma migrate dev --name init --schema=./apps/gateway/prisma/schema.prisma",
+    "migrate:deploy": "npx prisma migrate deploy --schema=./apps/gateway/prisma/schema.prisma",
+    "prisma-generate": "npx prisma generate --schema=./apps/gateway/prisma/schema.prisma",
+    "prisma-studio": "npx prisma studio --schema=./apps/gateway/prisma/schema.prisma"
   },
   "dependencies": {
     "@nestjs/axios": "^3.1.2",

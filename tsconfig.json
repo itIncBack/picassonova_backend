@@ -29,7 +29,6 @@
       "@libs/*": ["libs/*"],
       "@apps/*": ["apps/*"],
 //      "@prisma/*": ["prisma/*"],
-      ".prisma/client": ["./node_modules/.prisma/client"]
     }
   },
 }
