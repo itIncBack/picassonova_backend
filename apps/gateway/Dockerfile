@@ -28,7 +28,7 @@ COPY --chown=node package*.json ./
 RUN npm install
 
 # Генерация клиента Prisma перед сборкой
-RUN npx prisma generate
+RUN npm run prisma-generate
 
 # Bundle app source code
 COPY --chown=node . .
