@@ -32,6 +32,7 @@ export class UsersRepository {
 
   public async getUserByEmail(email: string): Promise<User | null> {
     try {
+      //@ts-ignore
       return await this.prisma.user.findFirst({
         where: {
           email: email,
@@ -57,6 +58,7 @@ export class UsersRepository {
 
   public async getUserById(userId: string): Promise<User | null> {
     try {
+      //@ts-ignore
       return await this.prisma.user.findFirst({
         where: {
           id: userId,
@@ -84,6 +86,7 @@ export class UsersRepository {
     email: string,
   ): Promise<UserWithPass | null> {
     try {
+      //@ts-ignore
       return await this.prisma.user.findFirst({
         where: {
           email: email,
