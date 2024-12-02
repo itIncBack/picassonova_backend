@@ -28,7 +28,7 @@
       "@infrastructure/*": ["libs/infrastructure/*"],
       "@libs/*": ["libs/*"],
       "@apps/*": ["apps/*"],
-
+      //"@prisma/client": ["node_modules/@prisma/client"]
     }
   },
 }
