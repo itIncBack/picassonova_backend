@@ -830,41 +830,41 @@
   resolved "https://registry.npmjs.org/@prisma/client/-/client-5.23.0-integration-otel-peer-deps.1.tgz"
   integrity sha512-Ovu3UUHlNW7iaKyMztVoBnL+m3VVnNcZnSd63jK6BnJeCYiR9Px7sWdYOrc9Sth3WiX9LBtBg4JoVlJX3st3yg==
 
-"@prisma/debug@5.22.0":
-  version "5.22.0"
-  resolved "https://registry.npmjs.org/@prisma/debug/-/debug-5.22.0.tgz"
-  integrity sha512-AUt44v3YJeggO2ZU5BkXI7M4hu9BF2zzH2iF2V5pyXT/lRTyWiElZ7It+bRH1EshoMRxHgpYg4VB6rCM+mG5jQ==
+"@prisma/debug@5.23.0-integration-otel-peer-deps.1":
+  version "5.23.0-integration-otel-peer-deps.1"
+  resolved "https://registry.yarnpkg.com/@prisma/debug/-/debug-5.23.0-integration-otel-peer-deps.1.tgz#e8ee3b6ca63cbe8dcc3af5db6dd6d755319ef41a"
+  integrity sha512-JJD56TtRcNMdo5DuR0MMEImys8oK+luAexP0QT2xsSbizoVabAJZpWHJGqoXfRhwwCegZQ2DgrKM/K1/NkX1FQ==
 
 "@prisma/engines-version@5.22.0-44.605197351a3c8bdd595af2d2a9bc3025bca48ea2":
   version "5.22.0-44.605197351a3c8bdd595af2d2a9bc3025bca48ea2"
   resolved "https://registry.npmjs.org/@prisma/engines-version/-/engines-version-5.22.0-44.605197351a3c8bdd595af2d2a9bc3025bca48ea2.tgz"
   integrity sha512-2PTmxFR2yHW/eB3uqWtcgRcgAbG1rwG9ZriSvQw+nnb7c4uCr3RAcGMb6/zfE88SKlC1Nj2ziUvc96Z379mHgQ==
 
-"@prisma/engines@5.22.0":
-  version "5.22.0"
-  resolved "https://registry.npmjs.org/@prisma/engines/-/engines-5.22.0.tgz"
-  integrity sha512-UNjfslWhAt06kVL3CjkuYpHAWSO6L4kDCVPegV6itt7nD1kSJavd3vhgAEhjglLJJKEdJ7oIqDJ+yHk6qO8gPA==
+"@prisma/engines@5.23.0-integration-otel-peer-deps.1":
+  version "5.23.0-integration-otel-peer-deps.1"
+  resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-5.23.0-integration-otel-peer-deps.1.tgz#a378179b72b04a0eff747b79c26acd76dcfd713c"
+  integrity sha512-ScfMAHm7pwwNXicz/rK5LTmi0cc97dLzmoxv5o7LnMZvlmXwflw6rK3OLpbYk56ezulwHGdWVNFqtPULdXv+5Q==
   dependencies:
-    "@prisma/debug" "5.22.0"
+    "@prisma/debug" "5.23.0-integration-otel-peer-deps.1"
     "@prisma/engines-version" "5.22.0-44.605197351a3c8bdd595af2d2a9bc3025bca48ea2"
-    "@prisma/fetch-engine" "5.22.0"
-    "@prisma/get-platform" "5.22.0"
+    "@prisma/fetch-engine" "5.23.0-integration-otel-peer-deps.1"
+    "@prisma/get-platform" "5.23.0-integration-otel-peer-deps.1"
 
-"@prisma/fetch-engine@5.22.0":
-  version "5.22.0"
-  resolved "https://registry.npmjs.org/@prisma/fetch-engine/-/fetch-engine-5.22.0.tgz"
-  integrity sha512-bkrD/Mc2fSvkQBV5EpoFcZ87AvOgDxbG99488a5cexp5Ccny+UM6MAe/UFkUC0wLYD9+9befNOqGiIJhhq+HbA==
+"@prisma/fetch-engine@5.23.0-integration-otel-peer-deps.1":
+  version "5.23.0-integration-otel-peer-deps.1"
+  resolved "https://registry.yarnpkg.com/@prisma/fetch-engine/-/fetch-engine-5.23.0-integration-otel-peer-deps.1.tgz#fbc83a5a2b633bfe80acf4dc9184d62e19a1bd78"
+  integrity sha512-1K8zJavR2/BwDp/AVpAj9+ddx9WjcB3M2c9MEDFVXYSvbWV8cV5O5/bdUdL9UZf61t4tJfnN6V7SktWkqTd+UQ==
   dependencies:
-    "@prisma/debug" "5.22.0"
+    "@prisma/debug" "5.23.0-integration-otel-peer-deps.1"
     "@prisma/engines-version" "5.22.0-44.605197351a3c8bdd595af2d2a9bc3025bca48ea2"
-    "@prisma/get-platform" "5.22.0"
+    "@prisma/get-platform" "5.23.0-integration-otel-peer-deps.1"
 
-"@prisma/get-platform@5.22.0":
-  version "5.22.0"
-  resolved "https://registry.npmjs.org/@prisma/get-platform/-/get-platform-5.22.0.tgz"
-  integrity sha512-pHhpQdr1UPFpt+zFfnPazhulaZYCUqeIcPpJViYoq9R+D/yw4fjE+CtnsnKzPYm0ddUbeXUzjGVGIRVgPDCk4Q==
+"@prisma/get-platform@5.23.0-integration-otel-peer-deps.1":
+  version "5.23.0-integration-otel-peer-deps.1"
+  resolved "https://registry.yarnpkg.com/@prisma/get-platform/-/get-platform-5.23.0-integration-otel-peer-deps.1.tgz#cf161404183b6bc6b534b90a1fc872f34a4094b3"
+  integrity sha512-KZ8HceSXEc0RlDOOO/pdBKrQi+J8Ch02yGpJ8ZeU/AjlXaWi/Oa5Cz8Dw+9t+5ZO/6eUsO1wSBwkVfBZmny+2w==
   dependencies:
-    "@prisma/debug" "5.22.0"
+    "@prisma/debug" "5.23.0-integration-otel-peer-deps.1"
 
 "@scarf/scarf@=1.4.0":
   version "1.4.0"
@@ -4223,12 +4223,12 @@ pretty-format@^29.0.0, pretty-format@^29.7.0:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
-prisma@5.22.0:
-  version "5.22.0"
-  resolved "https://registry.npmjs.org/prisma/-/prisma-5.22.0.tgz"
-  integrity sha512-vtpjW3XuYCSnMsNVBjLMNkTj6OZbudcPPTPYHqX0CJfpcdWciI1dM8uHETwmDxxiqEwCIE6WvXucWUetJgfu/A==
+prisma@5.23.0-integration-otel-peer-deps.1:
+  version "5.23.0-integration-otel-peer-deps.1"
+  resolved "https://registry.yarnpkg.com/prisma/-/prisma-5.23.0-integration-otel-peer-deps.1.tgz#c917d7721d8c22c876f7f1209782dfd3f5c35b1c"
+  integrity sha512-jdKPLmaZG9wnNEWujlgPTeTGNNWLMiWqCaSvl7MG0jZLeKqURNvHHHHAml9puLBB2hkfmtfokZz9FmN8pk0m8A==
   dependencies:
-    "@prisma/engines" "5.22.0"
+    "@prisma/engines" "5.23.0-integration-otel-peer-deps.1"
   optionalDependencies:
     fsevents "2.3.3"
 
@@ -5121,6 +5121,7 @@ word-wrap@^1.2.5:
   integrity sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==
 
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.npmjs.org/wrap-ansi/-/wrap-ansi-7.0.0.tgz"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
