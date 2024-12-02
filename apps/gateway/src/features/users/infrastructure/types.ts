@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { Role } from '@apps/gateway/prisma/types/types';
 
 export type User = {
   id: string;
