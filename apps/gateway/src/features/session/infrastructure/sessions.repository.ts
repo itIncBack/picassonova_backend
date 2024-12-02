@@ -1,5 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { PrismaService } from '@prisma/prisma.service';
+import { PrismaService } from '@apps/gateway/prisma/prisma.service';
 import { NewSessionDto } from '@apps/gateway/src/features/session/api/dto/new-session.dto';
 import { NewSession } from '@apps/gateway/src/features/session/infrastructure/types';
 
