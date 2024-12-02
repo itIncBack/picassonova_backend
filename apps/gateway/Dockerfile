@@ -25,13 +25,15 @@ WORKDIR /home/node/dist/${SERVICE}
 
 COPY --chown=node package*.json ./
 
-RUN npm install
+RUN npm install --frozen-lockfile
+
+# Генерация клиента Prisma перед сборкой
+RUN npx prisma generate --schema=apps/gateway/prisma/schema.prisma
 
 # Bundle app source code
 COPY --chown=node . .
 
-# Генерация клиента Prisma перед сборкой
-RUN npx prisma generate --schema=apps/gateway/prisma/schema.prisma
+
 
 RUN npm run build:${SERVICE}
 
