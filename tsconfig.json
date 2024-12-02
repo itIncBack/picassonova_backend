@@ -28,6 +28,7 @@
       "@infrastructure/*": ["libs/infrastructure/*"],
       "@libs/*": ["libs/*"],
       "@apps/*": ["apps/*"],
+      "@prisma/*": ["apps/*/prisma/*"]
     }
   },
 }

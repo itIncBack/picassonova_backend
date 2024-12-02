@@ -30,6 +30,9 @@ RUN npm install
 # Bundle app source code
 COPY --chown=node . .
 
+# Генерация клиента Prisma перед сборкой
+RUN npx prisma generate
+
 RUN npm run build:${SERVICE}
 
 
@@ -37,5 +40,5 @@ RUN npm run build:${SERVICE}
 
 EXPOSE ${PORT}
 
-CMD npm run migrate:add && npm run migrate:deploy && npm run prisma-generate && npm run start:gateway
+CMD npm run migrate:add && npm run migrate:deploy && npm run start:gateway
 
