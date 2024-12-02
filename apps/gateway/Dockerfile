@@ -31,7 +31,6 @@ RUN npm install
 COPY --chown=node . .
 
 # Генерация клиента Prisma перед сборкой
-RUN npx prisma generate
 RUN npx prisma generate --schema=apps/gateway/prisma/schema.prisma
 
 RUN npm run build:${SERVICE}
