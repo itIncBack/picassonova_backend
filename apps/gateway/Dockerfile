@@ -32,8 +32,6 @@ COPY --chown=node . .
 
 RUN npm run build:${SERVICE}
 
-RUN npx prisma generate --schema=apps/gateway/prisma/schema.prisma
-
 
 # Bind to all network interfaces so that it can be mapped to the host OS
 
