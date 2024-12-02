@@ -26,6 +26,7 @@ WORKDIR /home/node/dist/${SERVICE}
 COPY --chown=node package*.json ./
 
 RUN npm install
+RUN npx prisma generate --schema=apps/gateway/prisma/schema.prisma
 
 # Bundle app source code
 COPY --chown=node . .
