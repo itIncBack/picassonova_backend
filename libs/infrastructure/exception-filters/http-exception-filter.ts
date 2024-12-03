@@ -27,6 +27,17 @@ export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
       ? responseBody.message
       : [responseBody?.message || 'An unexpected error occurred'];
 
+    // Handle specific 404 error
+    if (status === HttpStatus.NOT_FOUND) {
+      notice.code = status;
+      notice.addError(
+        'Resource not found',
+        `The requested URL ${request.url} was not found on the server.`,
+        status,
+      );
+      return response.status(status).json(notice);
+    }
+
     messages.forEach((message) => {
       const key = isResponseObject ? responseBody.key : null;
       notice.extensions.push(new InterlayerNoticeExtension(message, key));
