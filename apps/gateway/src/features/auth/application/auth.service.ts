@@ -381,11 +381,7 @@ export class AuthService {
 
     const { user_id, device_id, session_id } = tokenPayload;
 
-    const session = await this.sessionsRepository.update(session_id);
-
-    if (!session) {
-      throw new UnauthorizedException();
-    }
+    await this.sessionsRepository.update(session_id);
 
     const { accessToken, refreshToken } = await this.generateTokens(
       user_id,
