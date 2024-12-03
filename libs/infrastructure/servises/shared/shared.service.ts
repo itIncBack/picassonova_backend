@@ -4,7 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import { HashBuilder } from '@infrastructure/servises/hash-builder/hash-builder';
 import { JwtSignOptions } from '@nestjs/jwt/dist/interfaces';
 import { JwtPayload } from 'jsonwebtoken';
-import { APP_PREFIX } from '@settings/apply-app-setting';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '@settings/configuration';
 import { EnvironmentsEnum } from '@settings/env-settings';

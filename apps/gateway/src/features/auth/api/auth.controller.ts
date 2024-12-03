@@ -76,6 +76,7 @@ export class AuthController {
   @ApiLogoutDocs()
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    //TODO: req res не должны быть в сервисе
     return this.authService.logout(req, res);
   }
 
@@ -104,6 +105,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
+    //TODO: req res не должны быть в сервисе
     return await this.authService.refreshTokens(req, res);
   }
 }

@@ -18,9 +18,12 @@ import { NewSession } from '@apps/gateway/src/features/session/infrastructure/ty
 import { ReCaptchaService } from '@infrastructure/servises/re-captcha/re-captcha.service';
 import { ConfirmationType } from '@prisma/client';
 import { RefreshTokenOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/refresh-token.output.dto';
+import { APISettings } from '@settings/api-settings';
 
 @Injectable()
 export class AuthService {
+  private readonly apiSettings: APISettings;
+
   constructor(
     private readonly confirmationRepository: ConfirmationRepository,
     private readonly configService: ConfigService<ConfigurationType, true>,
@@ -29,10 +32,8 @@ export class AuthService {
     private readonly sessionsRepository: SessionsRepository,
     private readonly cookieService: CookieService,
     private readonly recaptchaService: ReCaptchaService,
-  ) {}
-
-  private getApiSettings() {
-    return this.configService.get('apiSettings', { infer: true });
+  ) {
+    this.apiSettings = this.configService.get('apiSettings', { infer: true });
   }
 
   private async createSession(
@@ -56,7 +57,7 @@ export class AuthService {
     deviceId: string,
     sessionId: string,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const apiSettings = this.getApiSettings();
+    const apiSettings = this.apiSettings;
 
     const refreshToken = await this.sharedService.getToken(
       userId,
@@ -82,8 +83,6 @@ export class AuthService {
   async signUp(user_name: string, password: string, email: string) {
     const user = await this.usersRepository.getUserByEmail(email);
 
-    const apiSettings = this.getApiSettings();
-
     if (user) {
       throw new BadRequestException({
         message: 'User already exists',
@@ -102,7 +101,7 @@ export class AuthService {
     const confirmationCode = await this.sharedService.generateConfirmationCode(
       newUser.id,
       {
-        expiresIn: apiSettings.EMAIL_CONFIRMATION_CODE_EXPIRED_IN,
+        expiresIn: this.apiSettings.EMAIL_CONFIRMATION_CODE_EXPIRED_IN,
       },
     );
 
@@ -238,7 +237,6 @@ export class AuthService {
 
   async resendVerificationEmail(email: string) {
     const user = await this.usersRepository.getUserByEmail(email);
-    const apiSettings = this.getApiSettings();
 
     if (!user) {
       throw new BadRequestException({
@@ -261,7 +259,7 @@ export class AuthService {
     const confirmationCode = await this.sharedService.generateConfirmationCode(
       user.id,
       {
-        expiresIn: apiSettings.EMAIL_CONFIRMATION_CODE_EXPIRED_IN,
+        expiresIn: this.apiSettings.EMAIL_CONFIRMATION_CODE_EXPIRED_IN,
       },
     );
 
@@ -297,7 +295,6 @@ export class AuthService {
     await this.recaptchaService.validate(recaptcha_token);
 
     const user = await this.usersRepository.getUserByEmail(email);
-    const apiSettings = this.getApiSettings();
 
     if (!user) {
       throw new BadRequestException({
@@ -309,7 +306,7 @@ export class AuthService {
     const confirmationCode = await this.sharedService.generateConfirmationCode(
       user.id,
       {
-        expiresIn: apiSettings.EMAIL_CONFIRMATION_CODE_EXPIRED_IN,
+        expiresIn: this.apiSettings.EMAIL_CONFIRMATION_CODE_EXPIRED_IN,
       },
     );
 
