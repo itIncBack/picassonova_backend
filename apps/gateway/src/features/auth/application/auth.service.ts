@@ -320,4 +320,43 @@ export class AuthService {
 
     await this.sharedService.sendRecoveryPassEmail(email, confirmationCode);
   }
+
+  async newPassword(newPassword: string, recoveryCode: string) {
+    const verifiedRecoveryCode =
+      this.sharedService.verifyConfirmationCode(recoveryCode);
+
+    if (!verifiedRecoveryCode || !verifiedRecoveryCode.user_id) {
+      throw new BadRequestException({
+        message: 'RecoveryCode code expired',
+        key: 'recoveryCode',
+      });
+    }
+
+    const confirmation =
+      await this.confirmationRepository.getConfirmationUserIdAndType(
+        verifiedRecoveryCode.user_id,
+        ConfirmationType.PASSWORD_RECOVERY,
+      );
+
+    if (
+      !confirmation ||
+      confirmation.is_confirmed ||
+      confirmation.code !== recoveryCode
+    ) {
+      throw new BadRequestException({
+        message: 'Recovery code not correct',
+        key: 'recoveryCode',
+      });
+    }
+
+    await this.confirmationRepository.updateIsConfirmed(confirmation.id, true);
+
+    const passwordHash =
+      await this.sharedService.generatePasswordHash(newPassword);
+
+    await this.usersRepository.updatePassword(
+      confirmation.user_id,
+      passwordHash,
+    );
+  }
 }

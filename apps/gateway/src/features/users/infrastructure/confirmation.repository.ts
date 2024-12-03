@@ -40,7 +40,7 @@ export class ConfirmationRepository {
       // Try to update an existing confirmation
       const updateResult = await this.prisma.confirmation.updateMany({
         where: { user_id: userId, type },
-        data: { code },
+        data: { code, is_confirmed: false },
       });
 
       // If an update was performed (record exists), return true
