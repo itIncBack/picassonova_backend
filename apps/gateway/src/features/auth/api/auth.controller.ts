@@ -23,6 +23,7 @@ import { PasswordRecoveryDto } from '@apps/gateway/src/features/auth/api/dto/inp
 import { ApiPasswordRecoveryDocs } from '@apps/gateway/src/features/auth/decorators/api-password-recovery-docs.decorator';
 import { NewPasswordDto } from '@apps/gateway/src/features/auth/api/dto/input/new-password.input.dto';
 import { ApiNewPasswordDocs } from '@apps/gateway/src/features/auth/decorators/api-new-password-docs.decorator';
+import { ApiRefreshTokenDocs } from '@apps/gateway/src/features/auth/decorators/api-refresh-token-docs.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -94,5 +95,15 @@ export class AuthController {
     const { new_password, recovery_code } = input;
 
     await this.authService.newPassword(new_password, recovery_code);
+  }
+
+  @Post('refresh-token')
+  @ApiRefreshTokenDocs()
+  @HttpCode(HttpStatus.OK)
+  async refreshTokens(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return await this.authService.refreshTokens(req, res);
   }
 }

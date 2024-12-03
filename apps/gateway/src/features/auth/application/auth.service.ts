@@ -17,6 +17,7 @@ import { CookieService } from '@infrastructure/servises/cookie/cookie.service';
 import { NewSession } from '@apps/gateway/src/features/session/infrastructure/types';
 import { ReCaptchaService } from '@infrastructure/servises/re-captcha/re-captcha.service';
 import { ConfirmationType } from '@prisma/client';
+import { RefreshTokenOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/refresh-token.output.dto';
 
 @Injectable()
 export class AuthService {
@@ -358,5 +359,38 @@ export class AuthService {
       confirmation.user_id,
       passwordHash,
     );
+  }
+
+  async refreshTokens(req: Request, res: Response) {
+    const refreshTokenFromRequest = this.cookieService.getCookie(
+      req,
+      COOKIE_KEY.REFRESH_TOKEN,
+    );
+
+    if (!refreshTokenFromRequest) {
+      throw new UnauthorizedException();
+    }
+
+    const tokenPayload = this.sharedService.verifyToken(
+      refreshTokenFromRequest,
+    );
+
+    if (!tokenPayload) {
+      throw new UnauthorizedException();
+    }
+
+    const { user_id, device_id, session_id } = tokenPayload;
+
+    await this.sessionsRepository.update(session_id);
+
+    const { accessToken, refreshToken } = await this.generateTokens(
+      user_id,
+      device_id,
+      session_id,
+    );
+
+    this.cookieService.setCookie(res, COOKIE_KEY.REFRESH_TOKEN, refreshToken);
+
+    return RefreshTokenOutputMapper(accessToken);
   }
 }
