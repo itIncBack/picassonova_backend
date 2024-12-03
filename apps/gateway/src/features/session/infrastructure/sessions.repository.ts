@@ -1,25 +1,24 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '@apps/gateway/prisma/prisma.service';
 import { NewSessionDto } from '@apps/gateway/src/features/session/api/dto/new-session.dto';
-import { NewSession } from '@apps/gateway/src/features/session/infrastructure/types';
 
 @Injectable()
 export class SessionsRepository {
   constructor(private prisma: PrismaService) {}
 
-  public async create(newSession: NewSessionDto): Promise<NewSession> {
+  public async create(newSession: NewSessionDto) {
     try {
       return await this.prisma.session.create({
         data: {
-          user_id: newSession.userId,
+          userId: newSession.userId,
           ip: newSession.ip,
           title: newSession.title,
-          device_id: newSession.deviceId,
+          deviceId: newSession.deviceId,
         },
         select: {
           id: true,
-          device_id: true,
-          user_id: true,
+          deviceId: true,
+          userId: true,
         },
       });
     } catch (e) {
@@ -32,17 +31,17 @@ export class SessionsRepository {
     }
   }
 
-  public async update(sessionId: string): Promise<NewSession> {
+  public async update(sessionId: string) {
     try {
       return await this.prisma.session.update({
         where: {
           id: sessionId,
         },
-        data: { updated_at: new Date() },
+        data: { updatedAt: new Date() },
         select: {
           id: true,
-          device_id: true,
-          user_id: true,
+          deviceId: true,
+          userId: true,
         },
       });
     } catch (e) {
@@ -55,20 +54,17 @@ export class SessionsRepository {
     }
   }
 
-  public async getSessionByUserAndDevice(
-    deviceId: string,
-    userId: string,
-  ): Promise<NewSession | null> {
+  public async getSessionByUserAndDevice(deviceId: string, userId: string) {
     try {
       return await this.prisma.session.findFirst({
         where: {
-          device_id: deviceId,
-          user_id: userId,
+          deviceId: deviceId,
+          userId: userId,
         },
         select: {
           id: true,
-          device_id: true,
-          user_id: true,
+          deviceId: true,
+          userId: true,
         },
       });
     } catch (e) {
@@ -91,8 +87,8 @@ export class SessionsRepository {
     try {
       await this.prisma.session.deleteMany({
         where: {
-          device_id: deviceId,
-          user_id: userId,
+          deviceId,
+          userId,
         },
       });
     } catch (e) {

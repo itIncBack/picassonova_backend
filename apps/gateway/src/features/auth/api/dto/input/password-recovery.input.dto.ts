@@ -20,5 +20,5 @@ export class PasswordRecoveryDto {
   @Trim()
   @IsString({ message: 'Recaptcha token must be a string' })
   @IsNotEmpty({ message: 'Recaptcha token is required' })
-  recaptcha_token: string;
+  recaptchaToken: string;
 }

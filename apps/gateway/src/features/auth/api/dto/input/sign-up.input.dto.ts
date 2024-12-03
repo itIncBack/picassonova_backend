@@ -20,7 +20,7 @@ export class SignUpInputDto {
     required: true,
   })
   @IsUserNameDecorator()
-  user_name: string;
+  userName: string;
 
   @ApiProperty({
     description: 'User email',

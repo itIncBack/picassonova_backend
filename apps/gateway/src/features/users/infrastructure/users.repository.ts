@@ -1,19 +1,19 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '@apps/gateway/prisma/prisma.service';
-import { CreateUser, NewUser, User, UserWithPass } from './types';
+import { CreateUser } from './types';
 
 @Injectable()
 export class UsersRepository {
   constructor(private prisma: PrismaService) {}
 
-  public async createUser(payload: CreateUser): Promise<NewUser> {
-    const { user_name, hashedPassword, email } = payload;
+  public async createUser(payload: CreateUser) {
+    const { userName, hashedPassword, email } = payload;
 
     try {
       return await this.prisma.user.create({
         data: {
           email,
-          user_name,
+          userName,
           password: hashedPassword,
         },
         select: {
@@ -30,7 +30,7 @@ export class UsersRepository {
     }
   }
 
-  public async getUserByEmail(email: string): Promise<User | null> {
+  public async getUserByEmail(email: string) {
     try {
       return await this.prisma.user.findFirst({
         where: {
@@ -38,10 +38,10 @@ export class UsersRepository {
         },
         select: {
           id: true,
-          user_name: true,
+          userName: true,
           email: true,
-          created_at: true,
-          updated_at: true,
+          createdAt: true,
+          updatedAt: true,
           role: true,
         },
       });
@@ -55,7 +55,7 @@ export class UsersRepository {
     }
   }
 
-  public async getUserById(userId: string): Promise<User | null> {
+  public async getUserById(userId: string) {
     try {
       return await this.prisma.user.findFirst({
         where: {
@@ -63,10 +63,10 @@ export class UsersRepository {
         },
         select: {
           id: true,
-          user_name: true,
+          userName: true,
           email: true,
-          created_at: true,
-          updated_at: true,
+          createdAt: true,
+          updatedAt: true,
           role: true,
         },
       });
@@ -80,9 +80,7 @@ export class UsersRepository {
     }
   }
 
-  public async getUserByEmailWithPass(
-    email: string,
-  ): Promise<UserWithPass | null> {
+  public async getUserByEmailWithPass(email: string) {
     try {
       return await this.prisma.user.findFirst({
         where: {
@@ -90,10 +88,10 @@ export class UsersRepository {
         },
         select: {
           id: true,
-          user_name: true,
+          userName: true,
           email: true,
-          created_at: true,
-          updated_at: true,
+          createdAt: true,
+          updatedAt: true,
           role: true,
           password: true,
         },

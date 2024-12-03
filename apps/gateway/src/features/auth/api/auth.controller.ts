@@ -34,9 +34,9 @@ export class AuthController {
   @ApiSignUpDocs()
   @HttpCode(HttpStatus.NO_CONTENT)
   async signUp(@Body() input: SignUpInputDto) {
-    const { user_name, password, email } = input;
+    const { userName, password, email } = input;
 
-    return this.authService.signUp(user_name, password, email);
+    return this.authService.signUp(userName, password, email);
   }
 
   @Post('sign-in')
@@ -48,7 +48,7 @@ export class AuthController {
     @Req() req: Request,
   ) {
     const { email, password } = input;
-
+    //TODO: req res не должны быть в сервисе
     return this.authService.signIn(email, password, res, req);
   }
 
@@ -84,18 +84,18 @@ export class AuthController {
   @ApiPasswordRecoveryDocs()
   @HttpCode(HttpStatus.NO_CONTENT)
   async passwordRecovery(@Body() input: PasswordRecoveryDto) {
-    const { email, recaptcha_token } = input;
+    const { email, recaptchaToken } = input;
 
-    await this.authService.passwordRecovery(email, recaptcha_token);
+    await this.authService.passwordRecovery(email, recaptchaToken);
   }
 
   @Post('new-password')
   @ApiNewPasswordDocs()
   @HttpCode(HttpStatus.NO_CONTENT)
   async newPassword(@Body() input: NewPasswordDto) {
-    const { new_password, recovery_code } = input;
+    const { newPassword, recoveryCode } = input;
 
-    await this.authService.newPassword(new_password, recovery_code);
+    await this.authService.newPassword(newPassword, recoveryCode);
   }
 
   @Post('refresh-token')

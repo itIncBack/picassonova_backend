@@ -14,7 +14,6 @@ import { COOKIE_KEY } from '@libs/utils/consts';
 import { SignInOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/sign-in.output.dto';
 import { SessionsRepository } from '@apps/gateway/src/features/session/infrastructure/sessions.repository';
 import { CookieService } from '@infrastructure/servises/cookie/cookie.service';
-import { NewSession } from '@apps/gateway/src/features/session/infrastructure/types';
 import { ReCaptchaService } from '@infrastructure/servises/re-captcha/re-captcha.service';
 import { ConfirmationType } from '@prisma/client';
 import { RefreshTokenOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/refresh-token.output.dto';
@@ -36,10 +35,7 @@ export class AuthService {
     this.apiSettings = this.configService.get('apiSettings', { infer: true });
   }
 
-  private async createSession(
-    userId: string,
-    req: Request,
-  ): Promise<NewSession> {
+  private async createSession(userId: string, req: Request) {
     const deviceId = getUniqueId();
     const userAgentHeader = req.headers['user-agent'] || 'unknown';
     const ipAddress = req.ip || 'unknown';
@@ -80,7 +76,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async signUp(user_name: string, password: string, email: string) {
+  async signUp(userName: string, password: string, email: string) {
     const user = await this.usersRepository.getUserByEmail(email);
 
     if (user) {
@@ -93,7 +89,7 @@ export class AuthService {
       await this.sharedService.generatePasswordHash(password);
 
     const newUser = await this.usersRepository.createUser({
-      user_name,
+      userName,
       hashedPassword,
       email,
     });
@@ -127,7 +123,7 @@ export class AuthService {
         ConfirmationType.EMAIL_VERIFICATION,
       );
 
-    if (!confirmation?.is_confirmed) {
+    if (!confirmation?.isConfirmed) {
       throw new UnauthorizedException();
     }
 
@@ -150,18 +146,18 @@ export class AuthService {
     );
 
     if (verifiedToken) {
-      const { user_id, device_id, session_id } = verifiedToken;
+      const { userId, deviceId, sessionId } = verifiedToken;
 
       const session = await this.sessionsRepository.getSessionByUserAndDevice(
-        device_id,
-        user_id,
+        deviceId,
+        userId,
       );
 
-      if (session && user_id === user.id) {
+      if (session && userId === user.id) {
         const { accessToken, refreshToken } = await this.generateTokens(
-          user_id,
-          device_id,
-          session_id,
+          userId,
+          deviceId,
+          sessionId,
         );
 
         await this.sessionsRepository.update(session.id);
@@ -177,8 +173,8 @@ export class AuthService {
         const newSession = await this.createSession(user.id, req);
 
         const { accessToken, refreshToken } = await this.generateTokens(
-          newSession.user_id,
-          newSession.device_id,
+          newSession.userId,
+          newSession.deviceId,
           newSession.id,
         );
 
@@ -195,8 +191,8 @@ export class AuthService {
     const newSession = await this.createSession(user.id, req);
 
     const { accessToken, refreshToken } = await this.generateTokens(
-      newSession.user_id,
-      newSession.device_id,
+      newSession.userId,
+      newSession.deviceId,
       newSession.id,
     );
 
@@ -225,7 +221,7 @@ export class AuthService {
       });
     }
 
-    if (confirmation.is_confirmed) {
+    if (confirmation.isConfirmed) {
       throw new BadRequestException({
         message: 'Email already confirmed',
         key: 'code',
@@ -250,7 +246,7 @@ export class AuthService {
         ConfirmationType.EMAIL_VERIFICATION,
       );
 
-    if (!confirmation || confirmation?.is_confirmed) {
+    if (!confirmation || confirmation?.isConfirmed) {
       throw new BadRequestException({
         message: 'Email already confirmed',
       });
@@ -284,15 +280,15 @@ export class AuthService {
     }
 
     await this.sessionsRepository.deleteSessionByUserAndDevice(
-      verifiedToken.device_id,
-      verifiedToken.user_id,
+      verifiedToken.deviceId,
+      verifiedToken.userId,
     );
 
     this.cookieService.clearCookie(res, COOKIE_KEY.REFRESH_TOKEN);
   }
 
-  async passwordRecovery(email: string, recaptcha_token: string) {
-    await this.recaptchaService.validate(recaptcha_token);
+  async passwordRecovery(email: string, recaptchaToken: string) {
+    await this.recaptchaService.validate(recaptchaToken);
 
     const user = await this.usersRepository.getUserByEmail(email);
 
@@ -323,7 +319,7 @@ export class AuthService {
     const verifiedRecoveryCode =
       this.sharedService.verifyConfirmationCode(recoveryCode);
 
-    if (!verifiedRecoveryCode || !verifiedRecoveryCode.user_id) {
+    if (!verifiedRecoveryCode || !verifiedRecoveryCode.userId) {
       throw new BadRequestException({
         message: 'RecoveryCode code expired',
         key: 'recoveryCode',
@@ -332,13 +328,13 @@ export class AuthService {
 
     const confirmation =
       await this.confirmationRepository.getConfirmationUserIdAndType(
-        verifiedRecoveryCode.user_id,
+        verifiedRecoveryCode.userId,
         ConfirmationType.PASSWORD_RECOVERY,
       );
 
     if (
       !confirmation ||
-      confirmation.is_confirmed ||
+      confirmation.isConfirmed ||
       confirmation.code !== recoveryCode
     ) {
       throw new BadRequestException({
@@ -353,7 +349,7 @@ export class AuthService {
       await this.sharedService.generatePasswordHash(newPassword);
 
     await this.usersRepository.updatePassword(
-      confirmation.user_id,
+      confirmation.userId,
       passwordHash,
     );
   }
@@ -376,14 +372,14 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const { user_id, device_id, session_id } = tokenPayload;
+    const { userId, deviceId, sessionId } = tokenPayload;
 
-    await this.sessionsRepository.update(session_id);
+    await this.sessionsRepository.update(sessionId);
 
     const { accessToken, refreshToken } = await this.generateTokens(
-      user_id,
-      device_id,
-      session_id,
+      userId,
+      deviceId,
+      sessionId,
     );
 
     this.cookieService.setCookie(res, COOKIE_KEY.REFRESH_TOKEN, refreshToken);

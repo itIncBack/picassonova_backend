@@ -18,7 +18,7 @@ export class ConfirmationRepository {
     try {
       return await this.prisma.confirmation.create({
         data: {
-          user_id: userId,
+          userId,
           code,
           type,
         },
@@ -39,8 +39,8 @@ export class ConfirmationRepository {
     try {
       // Try to update an existing confirmation
       const updateResult = await this.prisma.confirmation.updateMany({
-        where: { user_id: userId, type },
-        data: { code, is_confirmed: false },
+        where: { userId, type },
+        data: { code, isConfirmed: false },
       });
 
       // If an update was performed (record exists), return true
@@ -51,7 +51,7 @@ export class ConfirmationRepository {
       // If no record was updated, create a new confirmation
       const newConfirmation = await this.prisma.confirmation.create({
         data: {
-          user_id: userId,
+          userId,
           code,
           type,
         },
@@ -93,7 +93,7 @@ export class ConfirmationRepository {
     try {
       return await this.prisma.confirmation.findFirst({
         where: {
-          user_id: userId,
+          userId,
           type: confirmationType,
         },
       });
@@ -113,7 +113,7 @@ export class ConfirmationRepository {
         where: {
           id: confirmationId,
         },
-        data: { is_confirmed: isConfirmed },
+        data: { isConfirmed },
       });
     } catch (e) {
       console.error('Error updating is_confirmed status:', {

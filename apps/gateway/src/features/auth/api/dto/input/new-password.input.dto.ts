@@ -20,7 +20,7 @@ export class NewPasswordDto {
     required: true,
   })
   @IsPasswordDecorator()
-  new_password: string;
+  newPassword: string;
 
   @ApiProperty({
     description: 'Recovery code for resetting the password.',
@@ -30,5 +30,5 @@ export class NewPasswordDto {
   @IsString({ message: 'RecoveryCode must be a string' })
   @Trim()
   @IsNotEmpty({ message: 'RecoveryCode is required' })
-  recovery_code: string;
+  recoveryCode: string;
 }

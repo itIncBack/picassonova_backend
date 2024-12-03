@@ -39,9 +39,9 @@ export class SharedService {
     options?: JwtSignOptions,
   ) {
     const payload = {
-      user_id: userId,
-      device_id: deviceId,
-      session_id: sessionId,
+      userId,
+      deviceId,
+      sessionId,
     };
 
     return await this.jwtService.signAsync(payload, options);
@@ -49,13 +49,13 @@ export class SharedService {
 
   public verifyToken(
     refreshToken?: string,
-  ): { user_id: string; device_id: string; session_id: string } | null {
+  ): { userId: string; deviceId: string; sessionId: string } | null {
     try {
       if (refreshToken) {
-        const { user_id, device_id, session_id } =
+        const { userId, deviceId, sessionId } =
           (this.jwtService.verify(refreshToken) as JwtPayload) ?? {};
 
-        return { user_id, device_id, session_id };
+        return { userId, deviceId, sessionId };
       }
 
       return null;
@@ -68,17 +68,17 @@ export class SharedService {
     userId: string,
     options?: JwtSignOptions,
   ): Promise<string> {
-    const payload = { user_id: userId };
+    const payload = { userId };
 
     return await this.jwtService.signAsync(payload, options);
   }
 
-  verifyConfirmationCode(token?: string): { user_id: string } | null {
+  verifyConfirmationCode(token?: string): { userId: string } | null {
     try {
       if (token) {
-        const { user_id } = (this.jwtService.verify(token) as JwtPayload) ?? {};
+        const { userId } = (this.jwtService.verify(token) as JwtPayload) ?? {};
 
-        return { user_id };
+        return { userId };
       }
 
       return null;
@@ -92,7 +92,7 @@ export class SharedService {
     const link =
       apiSettings.ENV === EnvironmentsEnum.PRODUCTION
         ? `https://picassonova.online/verify-email?code=${confirmationCode}`
-        : `http://localhost:${apiSettings.PORT}/verify-email?code=${confirmationCode}`;
+        : `http://localhost:3000/verify-email?code=${confirmationCode}`;
     const subject = 'Confirm your email address';
     const text = `Please confirm your email address by clicking the following link: link`;
     const html = `<p>Please confirm your email address by clicking the link below:</p><p><a href="${link}">Confirm Email</a></p>`;
@@ -106,7 +106,7 @@ export class SharedService {
     const link =
       apiSettings.ENV === EnvironmentsEnum.PRODUCTION
         ? `https://picassonova.online/password-recovery?code=${confirmationCode}`
-        : `http://localhost:${apiSettings.PORT}/password-recovery?code=${confirmationCode}`;
+        : `http://localhost:3000/password-recovery?code=${confirmationCode}`;
 
     const subject = 'Password recovery';
     const text = `To finish password recovery please follow the link below: link`;

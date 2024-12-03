@@ -38,6 +38,17 @@ export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
       return response.status(status).json(notice);
     }
 
+    // Handle specific 401 error
+    if (status === HttpStatus.UNAUTHORIZED) {
+      notice.code = status;
+      notice.addError(
+        'Unauthorized',
+        'Authentication is required to access this resource. Please provide valid credentials.',
+        status,
+      );
+      return response.status(status).json(notice);
+    }
+
     messages.forEach((message) => {
       const key = isResponseObject ? responseBody.key : null;
       notice.extensions.push(new InterlayerNoticeExtension(message, key));
