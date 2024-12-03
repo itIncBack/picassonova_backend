@@ -107,4 +107,27 @@ export class UsersRepository {
       );
     }
   }
+
+  public async updatePassword(
+    userId: string,
+    password: string,
+  ): Promise<boolean> {
+    try {
+      const result = await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          password: password,
+        },
+      });
+
+      return Boolean(result);
+    } catch (e) {
+      console.error('Error during update password operation:', {
+        error: (e as Error).message,
+      });
+      throw new InternalServerErrorException('Error updating user password');
+    }
+  }
 }
