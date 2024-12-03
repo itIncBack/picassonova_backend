@@ -24,11 +24,19 @@ import { ApiPasswordRecoveryDocs } from '@apps/gateway/src/features/auth/decorat
 import { NewPasswordDto } from '@apps/gateway/src/features/auth/api/dto/input/new-password.input.dto';
 import { ApiNewPasswordDocs } from '@apps/gateway/src/features/auth/decorators/api-new-password-docs.decorator';
 import { ApiRefreshTokenDocs } from '@apps/gateway/src/features/auth/decorators/api-refresh-token-docs.decorator';
+import { COOKIE_KEY } from '@libs/utils/consts';
+import { CookieService } from '@infrastructure/servises/cookie/cookie.service';
+import { SignInMapper } from '@apps/gateway/src/features/auth/api/dto/sign-in.dto';
+import { SignInOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/sign-in.output.dto';
+import { RefreshTokenOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/refresh-token.output.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly cookieService: CookieService,
+  ) {}
 
   @Post('sign-up')
   @ApiSignUpDocs()
@@ -48,8 +56,31 @@ export class AuthController {
     @Req() req: Request,
   ) {
     const { email, password } = input;
-    //TODO: req res не должны быть в сервисе
-    return this.authService.signIn(email, password, res, req);
+
+    const ipAddress = req.ip;
+    const userAgent = req.headers['user-agent'];
+    const refreshTokenFromRequest = this.cookieService.getCookie(
+      req,
+      COOKIE_KEY.REFRESH_TOKEN,
+    );
+
+    const payload = SignInMapper({
+      ipAddress,
+      userAgent,
+      refreshTokenFromRequest,
+      email,
+      password,
+    });
+
+    const tokens = await this.authService.signIn(payload);
+
+    this.cookieService.setCookie(
+      res,
+      COOKIE_KEY.REFRESH_TOKEN,
+      tokens.refreshToken,
+    );
+
+    return SignInOutputMapper(tokens.accessToken);
   }
 
   @Post('verify-email')
@@ -76,8 +107,14 @@ export class AuthController {
   @ApiLogoutDocs()
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    //TODO: req res не должны быть в сервисе
-    return this.authService.logout(req, res);
+    const refreshToken = this.cookieService.getCookie(
+      req,
+      COOKIE_KEY.REFRESH_TOKEN,
+    );
+
+    await this.authService.logout(refreshToken);
+
+    this.cookieService.clearCookie(res, COOKIE_KEY.REFRESH_TOKEN);
   }
 
   @Post('password-recovery')
@@ -105,7 +142,21 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    //TODO: req res не должны быть в сервисе
-    return await this.authService.refreshTokens(req, res);
+    const refreshTokenFromRequest = this.cookieService.getCookie(
+      req,
+      COOKIE_KEY.REFRESH_TOKEN,
+    );
+
+    const tokens = await this.authService.refreshTokens(
+      refreshTokenFromRequest,
+    );
+
+    this.cookieService.setCookie(
+      res,
+      COOKIE_KEY.REFRESH_TOKEN,
+      tokens.refreshToken,
+    );
+
+    return RefreshTokenOutputMapper(tokens.accessToken);
   }
 }

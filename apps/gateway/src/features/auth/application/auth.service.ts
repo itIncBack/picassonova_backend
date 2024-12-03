@@ -8,16 +8,12 @@ import { ConfigurationType } from '@settings/configuration';
 import { UsersRepository } from '@apps/gateway/src/features/users/infrastructure/users.repository';
 import { SharedService } from '@infrastructure/servises/shared/shared.service';
 import { ConfirmationRepository } from '@apps/gateway/src/features/users/infrastructure/confirmation.repository';
-import { Request, Response } from 'express';
 import { getUniqueId } from '@libs/utils/utils';
-import { COOKIE_KEY } from '@libs/utils/consts';
-import { SignInOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/sign-in.output.dto';
 import { SessionsRepository } from '@apps/gateway/src/features/session/infrastructure/sessions.repository';
-import { CookieService } from '@infrastructure/servises/cookie/cookie.service';
 import { ReCaptchaService } from '@infrastructure/servises/re-captcha/re-captcha.service';
 import { ConfirmationType } from '@prisma/client';
-import { RefreshTokenOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/refresh-token.output.dto';
 import { APISettings } from '@settings/api-settings';
+import { SignInDto } from '@apps/gateway/src/features/auth/api/dto/sign-in.dto';
 
 @Injectable()
 export class AuthService {
@@ -29,16 +25,17 @@ export class AuthService {
     private readonly sharedService: SharedService,
     private readonly usersRepository: UsersRepository,
     private readonly sessionsRepository: SessionsRepository,
-    private readonly cookieService: CookieService,
     private readonly recaptchaService: ReCaptchaService,
   ) {
     this.apiSettings = this.configService.get('apiSettings', { infer: true });
   }
 
-  private async createSession(userId: string, req: Request) {
+  private async createSession(
+    userId: string,
+    userAgentHeader: string,
+    ipAddress: string,
+  ) {
     const deviceId = getUniqueId();
-    const userAgentHeader = req.headers['user-agent'] || 'unknown';
-    const ipAddress = req.ip || 'unknown';
 
     return this.sessionsRepository.create({
       userId,
@@ -110,7 +107,9 @@ export class AuthService {
     await this.sharedService.sendVerifyEmail(email, confirmationCode);
   }
 
-  async signIn(email: string, password: string, res: Response, req: Request) {
+  async signIn(payload: SignInDto) {
+    const { email, password, refreshTokenFromRequest, ipAddress, userAgent } =
+      payload;
     const user = await this.usersRepository.getUserByEmailWithPass(email);
 
     if (!user) {
@@ -136,11 +135,6 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const refreshTokenFromRequest = this.cookieService.getCookie(
-      req,
-      COOKIE_KEY.REFRESH_TOKEN,
-    );
-
     const verifiedToken = this.sharedService.verifyToken(
       refreshTokenFromRequest,
     );
@@ -154,51 +148,33 @@ export class AuthService {
       );
 
       if (session && userId === user.id) {
-        const { accessToken, refreshToken } = await this.generateTokens(
-          userId,
-          deviceId,
-          sessionId,
-        );
+        const tokens = await this.generateTokens(userId, deviceId, sessionId);
 
         await this.sessionsRepository.update(session.id);
 
-        this.cookieService.setCookie(
-          res,
-          COOKIE_KEY.REFRESH_TOKEN,
-          refreshToken,
+        return tokens;
+      } else {
+        const newSession = await this.createSession(
+          user.id,
+          userAgent,
+          ipAddress,
         );
 
-        return SignInOutputMapper(accessToken);
-      } else {
-        const newSession = await this.createSession(user.id, req);
-
-        const { accessToken, refreshToken } = await this.generateTokens(
+        return await this.generateTokens(
           newSession.userId,
           newSession.deviceId,
           newSession.id,
         );
-
-        this.cookieService.setCookie(
-          res,
-          COOKIE_KEY.REFRESH_TOKEN,
-          refreshToken,
-        );
-
-        return SignInOutputMapper(accessToken);
       }
     }
 
-    const newSession = await this.createSession(user.id, req);
+    const newSession = await this.createSession(user.id, userAgent, ipAddress);
 
-    const { accessToken, refreshToken } = await this.generateTokens(
+    return await this.generateTokens(
       newSession.userId,
       newSession.deviceId,
       newSession.id,
     );
-
-    this.cookieService.setCookie(res, COOKIE_KEY.REFRESH_TOKEN, refreshToken);
-
-    return SignInOutputMapper(accessToken);
   }
 
   async verifyEmail(code: string) {
@@ -267,12 +243,7 @@ export class AuthService {
     await this.sharedService.sendVerifyEmail(email, confirmationCode);
   }
 
-  async logout(req: Request, res: Response) {
-    const refreshToken = this.cookieService.getCookie(
-      req,
-      COOKIE_KEY.REFRESH_TOKEN,
-    );
-
+  async logout(refreshToken?: string) {
     const verifiedToken = this.sharedService.verifyToken(refreshToken);
 
     if (!verifiedToken) {
@@ -283,8 +254,6 @@ export class AuthService {
       verifiedToken.deviceId,
       verifiedToken.userId,
     );
-
-    this.cookieService.clearCookie(res, COOKIE_KEY.REFRESH_TOKEN);
   }
 
   async passwordRecovery(email: string, recaptchaToken: string) {
@@ -354,12 +323,7 @@ export class AuthService {
     );
   }
 
-  async refreshTokens(req: Request, res: Response) {
-    const refreshTokenFromRequest = this.cookieService.getCookie(
-      req,
-      COOKIE_KEY.REFRESH_TOKEN,
-    );
-
+  async refreshTokens(refreshTokenFromRequest?: string) {
     if (!refreshTokenFromRequest) {
       throw new UnauthorizedException();
     }
@@ -376,14 +340,6 @@ export class AuthService {
 
     await this.sessionsRepository.update(sessionId);
 
-    const { accessToken, refreshToken } = await this.generateTokens(
-      userId,
-      deviceId,
-      sessionId,
-    );
-
-    this.cookieService.setCookie(res, COOKIE_KEY.REFRESH_TOKEN, refreshToken);
-
-    return RefreshTokenOutputMapper(accessToken);
+    return await this.generateTokens(userId, deviceId, sessionId);
   }
 }
