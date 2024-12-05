@@ -12,8 +12,11 @@ export class CookieService {
   ): void {
     res.cookie(name, value, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      //TODO: secure: false, временно для разработки
+      secure: false,
+      //TODO: sameSite: 'lax', временно для разработки потом вернуть на none
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
       ...options,
     });
   }
@@ -25,6 +28,13 @@ export class CookieService {
 
   // Метод для удаления cookie
   clearCookie(res: Response, name: string, options?: CookieOptions): void {
-    res.clearCookie(name, options);
+    res.clearCookie(name, {
+      httpOnly: true,
+      //TODO: secure: false, временно для разработки
+      secure: false,
+      //TODO: sameSite: 'lax', временно для разработки потом вернуть на none
+      sameSite: 'lax',
+      ...options,
+    });
   }
 }
