@@ -23,16 +23,9 @@ export class CookieService {
     options: CookieOptions = {},
   ): void {
     res.cookie(name, value, {
-      domain: 'localhost',
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: false,
-      httpOnly: true,
-      //path: '/',
-
-      //secure: this.environmentSettings.isProduction(),
-      //sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
-      //sameSite: 'none',
-
+      httpOnly: false,
       ...options,
     });
   }
@@ -45,14 +38,9 @@ export class CookieService {
   // Метод для удаления cookie
   clearCookie(res: Response, name: string, options?: CookieOptions): void {
     res.clearCookie(name, {
-      domain: 'localhost',
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: false,
-      httpOnly: true,
-      //domain: 'picassonova.online',
-      //path: '/',
-      //secure: this.environmentSettings.isProduction(),
-      //sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
+      httpOnly: false,
       ...options,
     });
   }
