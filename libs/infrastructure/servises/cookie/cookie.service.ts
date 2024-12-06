@@ -25,9 +25,8 @@ export class CookieService {
     res.cookie(name, value, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-      // secure: true,
-      // sameSite: 'none',
-      sameSite: 'lax', // Либо 'strict' для большей безопасности
+      secure: true,
+      sameSite: 'none',
       domain: 'localhost', // Укажите домен локальной разработки
       ...options,
     });
@@ -45,6 +44,7 @@ export class CookieService {
       maxAge: 0, // 1 day
       secure: true,
       sameSite: 'none',
+      domain: 'localhost',
       ...options,
     });
   }
