@@ -51,6 +51,7 @@ export const applyAppSettings = (app: INestApplication) => {
 const setEnableCors = (app: INestApplication) => {
   const allowedOrigins = [
     'http://localhost:3000',
+    'http://localhost:3001',
     'https://picassonova.online',
     'http://localhost:63342',
   ];

@@ -27,7 +27,6 @@ export class CookieService {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: true,
       sameSite: 'none',
-      domain: 'localhost:3000', // Укажите домен локальной разработки
       ...options,
     });
   }
@@ -44,7 +43,6 @@ export class CookieService {
       maxAge: 0, // 1 day
       secure: true,
       sameSite: 'none',
-      domain: 'localhost:3000',
       ...options,
     });
   }
