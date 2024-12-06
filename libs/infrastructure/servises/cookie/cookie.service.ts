@@ -23,13 +23,13 @@ export class CookieService {
     options: CookieOptions = {},
   ): void {
     res.cookie(name, value, {
-      // domain: 'localhost',
+      domain: 'picassonova.online',
       //path: '/',
       httpOnly: true,
       //secure: this.environmentSettings.isProduction(),
-      secure: false,
+      secure: true,
       //sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
-      sameSite: 'lax',
+      sameSite: 'none',
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       ...options,
     });
@@ -44,12 +44,12 @@ export class CookieService {
   clearCookie(res: Response, name: string, options?: CookieOptions): void {
     res.clearCookie(name, {
       httpOnly: true,
-      // domain: 'localhost',
+      domain: 'picassonova.online',
       //path: '/',
       //secure: this.environmentSettings.isProduction(),
-      secure: false,
+      secure: true,
       //sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
-      sameSite: 'lax',
+      sameSite: 'none',
       maxAge: 0,
       ...options,
     });
