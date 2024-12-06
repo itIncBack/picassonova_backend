@@ -26,7 +26,7 @@ export class CookieService {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: false,
       httpOnly: true,
-      sameSite: 'none',
+      sameSite: 'lax',
       //path: '/',
 
       //secure: this.environmentSettings.isProduction(),
@@ -44,10 +44,10 @@ export class CookieService {
   // Метод для удаления cookie
   clearCookie(res: Response, name: string, options?: CookieOptions): void {
     res.clearCookie(name, {
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 0, // 1 day
       secure: false,
       httpOnly: true,
-      sameSite: 'none',
+      sameSite: 'lax',
       //domain: 'picassonova.online',
       //path: '/',
       //secure: this.environmentSettings.isProduction(),
