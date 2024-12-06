@@ -23,7 +23,7 @@ export class CookieService {
     options: CookieOptions = {},
   ): void {
     res.cookie(name, value, {
-      domain: 'picassonova.online',
+      //domain: 'picassonova.online',
       //path: '/',
       httpOnly: true,
       //secure: this.environmentSettings.isProduction(),
@@ -44,7 +44,7 @@ export class CookieService {
   clearCookie(res: Response, name: string, options?: CookieOptions): void {
     res.clearCookie(name, {
       httpOnly: true,
-      domain: 'picassonova.online',
+      //domain: 'picassonova.online',
       //path: '/',
       //secure: this.environmentSettings.isProduction(),
       secure: false,
