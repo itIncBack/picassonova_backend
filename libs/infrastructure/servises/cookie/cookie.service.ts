@@ -26,12 +26,7 @@ export class CookieService {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: false,
       httpOnly: true,
-      sameSite: 'lax',
-      //path: '/',
-
-      //secure: this.environmentSettings.isProduction(),
-      //sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
-
+      sameSite: 'none',
       ...options,
     });
   }
@@ -47,7 +42,7 @@ export class CookieService {
       maxAge: 0, // 1 day
       secure: false,
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'none',
       //domain: 'picassonova.online',
       //path: '/',
       //secure: this.environmentSettings.isProduction(),
