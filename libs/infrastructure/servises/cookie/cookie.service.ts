@@ -1,8 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { Response, Request, CookieOptions } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { ConfigurationType } from '@settings/configuration';
+import nodemailer from 'nodemailer';
+import { APISettings } from '@settings/api-settings';
+import { EnvironmentsEnum, EnvironmentSettings } from '@settings/env-settings';
 
 @Injectable()
 export class CookieService {
+  private readonly environmentSettings: EnvironmentSettings;
+
+  constructor(
+    private readonly configService: ConfigService<ConfigurationType, true>,
+  ) {
+    this.environmentSettings = configService.get('environmentSettings', {
+      infer: true,
+    });
+  }
   // Метод для установки cookie
   setCookie(
     res: Response,
@@ -12,10 +26,8 @@ export class CookieService {
   ): void {
     res.cookie(name, value, {
       httpOnly: true,
-      //TODO: secure: false, временно для разработки
-      secure: false,
-      //TODO: sameSite: 'lax', временно для разработки потом вернуть на none
-      sameSite: 'lax',
+      secure: this.environmentSettings.isProduction(),
+      sameSite: 'none',
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       ...options,
     });
@@ -30,10 +42,8 @@ export class CookieService {
   clearCookie(res: Response, name: string, options?: CookieOptions): void {
     res.clearCookie(name, {
       httpOnly: true,
-      //TODO: secure: false, временно для разработки
-      secure: false,
-      //TODO: sameSite: 'lax', временно для разработки потом вернуть на none
-      sameSite: 'lax',
+      secure: this.environmentSettings.isProduction(),
+      sameSite: 'none',
       ...options,
     });
   }

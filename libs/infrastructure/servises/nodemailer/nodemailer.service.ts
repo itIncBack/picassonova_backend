@@ -12,7 +12,6 @@ export class NodeMailer {
     private readonly configService: ConfigService<ConfigurationType, true>,
   ) {
     const apiSettings = configService.get('apiSettings', { infer: true });
-
     this.transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
