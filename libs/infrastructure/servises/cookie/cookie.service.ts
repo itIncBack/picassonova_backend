@@ -24,6 +24,7 @@ export class CookieService {
   ): void {
     res.cookie(name, value, {
       domain: 'picassonova.online',
+      path: '/',
       httpOnly: true,
       secure: this.environmentSettings.isProduction(),
       sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
@@ -42,6 +43,7 @@ export class CookieService {
     res.clearCookie(name, {
       httpOnly: true,
       domain: 'picassonova.online',
+      path: '/',
       secure: this.environmentSettings.isProduction(),
       sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
       maxAge: 0,
