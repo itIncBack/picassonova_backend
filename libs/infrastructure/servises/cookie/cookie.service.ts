@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Response, Request, CookieOptions } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '@settings/configuration';
-import nodemailer from 'nodemailer';
-import { APISettings } from '@settings/api-settings';
-import { EnvironmentsEnum, EnvironmentSettings } from '@settings/env-settings';
+import { EnvironmentSettings } from '@settings/env-settings';
 
 @Injectable()
 export class CookieService {
@@ -27,7 +25,7 @@ export class CookieService {
     res.cookie(name, value, {
       httpOnly: true,
       secure: this.environmentSettings.isProduction(),
-      sameSite: 'none',
+      sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       ...options,
     });
@@ -43,7 +41,8 @@ export class CookieService {
     res.clearCookie(name, {
       httpOnly: true,
       secure: this.environmentSettings.isProduction(),
-      sameSite: 'none',
+      sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
+      maxAge: 0,
       ...options,
     });
   }
