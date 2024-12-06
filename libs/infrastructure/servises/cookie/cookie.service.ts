@@ -25,7 +25,7 @@ export class CookieService {
     res.cookie(name, value, {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: false,
-      httpOnly: false,
+      httpOnly: true,
       ...options,
     });
   }
@@ -40,7 +40,7 @@ export class CookieService {
     res.clearCookie(name, {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: false,
-      httpOnly: false,
+      httpOnly: true,
       ...options,
     });
   }
