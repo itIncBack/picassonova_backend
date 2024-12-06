@@ -26,8 +26,9 @@ export class CookieService {
       domain: 'localhost',
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: false,
+      httpOnly: true,
       //path: '/',
-      //httpOnly: true,
+
       //secure: this.environmentSettings.isProduction(),
       //sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
       //sameSite: 'none',
@@ -47,7 +48,7 @@ export class CookieService {
       domain: 'localhost',
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: false,
-      //httpOnly: true,
+      httpOnly: true,
       //domain: 'picassonova.online',
       //path: '/',
       //secure: this.environmentSettings.isProduction(),
