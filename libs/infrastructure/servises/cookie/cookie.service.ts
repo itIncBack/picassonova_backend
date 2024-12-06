@@ -24,12 +24,12 @@ export class CookieService {
   ): void {
     res.cookie(name, value, {
       // domain: 'localhost',
-      path: '/',
+      //path: '/',
       httpOnly: true,
       //secure: this.environmentSettings.isProduction(),
       secure: false,
       //sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
-      sameSite: 'none',
+      sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       ...options,
     });
@@ -45,11 +45,11 @@ export class CookieService {
     res.clearCookie(name, {
       httpOnly: true,
       // domain: 'localhost',
-      path: '/',
+      //path: '/',
       //secure: this.environmentSettings.isProduction(),
       secure: false,
       //sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
-      sameSite: 'none',
+      sameSite: 'lax',
       maxAge: 0,
       ...options,
     });
