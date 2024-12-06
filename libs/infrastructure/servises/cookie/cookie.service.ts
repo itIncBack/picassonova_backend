@@ -23,7 +23,7 @@ export class CookieService {
     options: CookieOptions = {},
   ): void {
     res.cookie(name, value, {
-      domain: 'localhost',
+      // domain: 'localhost',
       path: '/',
       httpOnly: true,
       secure: this.environmentSettings.isProduction(),
@@ -42,7 +42,7 @@ export class CookieService {
   clearCookie(res: Response, name: string, options?: CookieOptions): void {
     res.clearCookie(name, {
       httpOnly: true,
-      domain: 'localhost',
+      // domain: 'localhost',
       path: '/',
       secure: this.environmentSettings.isProduction(),
       sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
