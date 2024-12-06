@@ -26,8 +26,10 @@ export class CookieService {
       // domain: 'localhost',
       path: '/',
       httpOnly: true,
-      secure: this.environmentSettings.isProduction(),
-      sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
+      //secure: this.environmentSettings.isProduction(),
+      secure: false,
+      //sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
+      sameSite: 'none',
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       ...options,
     });
@@ -44,8 +46,10 @@ export class CookieService {
       httpOnly: true,
       // domain: 'localhost',
       path: '/',
-      secure: this.environmentSettings.isProduction(),
-      sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
+      //secure: this.environmentSettings.isProduction(),
+      secure: false,
+      //sameSite: this.environmentSettings.isProduction() ? 'none' : 'lax',
+      sameSite: 'none',
       maxAge: 0,
       ...options,
     });
