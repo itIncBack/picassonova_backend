@@ -112,8 +112,6 @@ export class AuthController {
       COOKIE_KEY.REFRESH_TOKEN,
     );
 
-    console.log('refreshToken', refreshToken);
-
     await this.authService.logout(refreshToken);
 
     this.cookieService.clearCookie(res, COOKIE_KEY.REFRESH_TOKEN);
