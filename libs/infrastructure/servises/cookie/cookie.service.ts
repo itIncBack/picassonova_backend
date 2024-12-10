@@ -23,7 +23,7 @@ export class CookieService {
     options: CookieOptions = {},
   ): void {
     res.cookie(name, value, {
-      // httpOnly: true,
+      httpOnly: this.environmentSettings.isProduction(),
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: true,
       sameSite: 'none',
@@ -39,7 +39,7 @@ export class CookieService {
   // Метод для удаления cookie
   clearCookie(res: Response, name: string, options?: CookieOptions): void {
     res.clearCookie(name, {
-      // httpOnly: true,
+      httpOnly: this.environmentSettings.isProduction(),
       maxAge: 0, // 1 day
       secure: true,
       sameSite: 'none',
