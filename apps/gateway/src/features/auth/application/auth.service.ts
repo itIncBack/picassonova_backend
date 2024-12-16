@@ -14,6 +14,7 @@ import { ReCaptchaService } from '@infrastructure/servises/re-captcha/re-captcha
 import { ConfirmationType } from '@prisma/client';
 import { APISettings } from '@settings/api-settings';
 import { SignInDto } from '@apps/gateway/src/features/auth/api/dto/sign-in.dto';
+import { MeOutputDtoMapper } from '@apps/gateway/src/features/auth/api/dto/output/me.output.dto';
 
 @Injectable()
 export class AuthService {
@@ -341,5 +342,19 @@ export class AuthService {
     await this.sessionsRepository.update(sessionId);
 
     return await this.generateTokens(userId, deviceId, sessionId);
+  }
+
+  async me(userId?: string) {
+    if (!userId) {
+      throw new UnauthorizedException();
+    }
+
+    const user = await this.usersRepository.getUserById(userId);
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return MeOutputDtoMapper(user);
   }
 }
