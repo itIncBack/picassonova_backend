@@ -5,6 +5,7 @@
     ]
   },
   "compilerOptions": {
+    "typeRoots" : ["./libs/types"],
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,

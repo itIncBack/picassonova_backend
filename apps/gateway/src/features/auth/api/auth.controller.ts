@@ -2,11 +2,13 @@ import { ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { SignUpInputDto } from './dto/input/sign-up.input.dto';
 import { SignInInputDto } from '@apps/gateway/src/features/auth/api/dto/input/sign-in.input.dto';
@@ -29,6 +31,8 @@ import { CookieService } from '@infrastructure/servises/cookie/cookie.service';
 import { SignInMapper } from '@apps/gateway/src/features/auth/api/dto/sign-in.dto';
 import { SignInOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/sign-in.output.dto';
 import { RefreshTokenOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/refresh-token.output.dto';
+import { BearerAuthGuard } from '@libs/guards/bearer-auth-guard.service';
+import { ApiMeDocs } from '@apps/gateway/src/features/auth/decorators/api-me-docs.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -158,5 +162,14 @@ export class AuthController {
     );
 
     return RefreshTokenOutputMapper(tokens.accessToken);
+  }
+
+  @ApiMeDocs()
+  @UseGuards(BearerAuthGuard)
+  @Get('me')
+  async me(@Req() request: Request) {
+    const userId = request.currentUserId;
+
+    return await this.authService.me(userId);
   }
 }

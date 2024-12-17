@@ -87,7 +87,15 @@ const setSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
     .setTitle('PICASSO API')
     .setDescription('This API uses cookies for refresh token authentication.')
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        description: 'Enter JWT Bearer token _only_ (without "Bearer" prefix).',
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'bearer',
+    )
     .setVersion('1.0')
     .addSecurity('refreshToken', {
       type: 'apiKey',
