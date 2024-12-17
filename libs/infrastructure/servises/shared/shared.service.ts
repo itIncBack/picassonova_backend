@@ -105,8 +105,8 @@ export class SharedService {
 
     const link =
       apiSettings.ENV === EnvironmentsEnum.PRODUCTION
-        ? `https://picassonova.online/password-recovery?code=${confirmationCode}`
-        : `http://localhost:3000/password-recovery?code=${confirmationCode}`;
+        ? `https://picassonova.online/auth/create-new-password?code=${confirmationCode}`
+        : `http://localhost:3000/auth/create-new-password?code=${confirmationCode}`;
 
     const subject = 'Password recovery';
     const text = `To finish password recovery please follow the link below: link`;
