@@ -5,12 +5,12 @@ export function ApiMeDocs() {
   return applyDecorators(
     ApiSecurity('bearer'),
     ApiOperation({
-      summary: 'Get user profile',
+      summary: 'Get information about current user',
       description: 'Returns information about the authenticated user.',
     }),
     ApiResponse({
       status: HttpStatus.OK,
-      description: 'Returns user profile information.',
+      description: 'Returns information about current user.',
       schema: {
         type: 'object',
         properties: {
