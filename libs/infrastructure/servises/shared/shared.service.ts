@@ -91,8 +91,8 @@ export class SharedService {
     const apiSettings = this.getApiSettings();
     const link =
       apiSettings.ENV === EnvironmentsEnum.PRODUCTION
-        ? `https://picassonova.online/verify-email?code=${confirmationCode}`
-        : `http://localhost:3000/verify-email?code=${confirmationCode}`;
+        ? `https://picassonova.online/auth/email-confirm?code=${confirmationCode}`
+        : `http://localhost:3000/auth/email-confirm?code=${confirmationCode}`;
     const subject = 'Confirm your email address';
     const text = `Please confirm your email address by clicking the following link: link`;
     const html = `<p>Please confirm your email address by clicking the link below:</p><p><a href="${link}">Confirm Email</a></p>`;
