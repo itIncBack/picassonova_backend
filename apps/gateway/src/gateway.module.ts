@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  forwardRef,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common';
 import { GatewayController } from '@apps/gateway/src/gateway.controller';
 import { GatewayService } from './gateway.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
@@ -19,6 +24,7 @@ import { AuthModule } from '@apps/gateway/src/features/auth/auth.module';
 import { SharedModule } from '@libs/modules/shared.module';
 import { JwtModule } from '@nestjs/jwt';
 import { SessionModule } from '@apps/gateway/src/features/session/session.module';
+import { PostsModule } from '@apps/gateway/src/features/posts/posts.module';
 
 config();
 
@@ -72,9 +78,11 @@ config();
     AuthModule,
     SharedModule,
     SessionModule,
+    forwardRef(() => PostsModule),
   ],
   controllers: [GatewayController],
   providers: [GatewayService],
+  exports: [GatewayService],
 })
 export class GatewayModule implements NestModule {
   // https://docs.nestjs.com/middleware#applying-middleware
