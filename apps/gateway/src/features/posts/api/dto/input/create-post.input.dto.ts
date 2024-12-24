@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsDefined,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreatePostInputDto {
   @ApiProperty({
@@ -14,4 +22,17 @@ export class CreatePostInputDto {
   @MinLength(1)
   @MaxLength(500)
   description: string;
+
+  @ApiProperty({
+    type: 'array',
+    items: {
+      type: 'string',
+      format: 'binary',
+    },
+    description: 'Upload photos',
+  })
+  @IsOptional()
+  @IsArray()
+  @ArrayMinSize(1)
+  photos?: Express.Multer.File[];
 }

@@ -1,5 +1,5 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
 
 import { BadRequestSchema } from '@apps/gateway/src/common/swagger/schemas/bad-request.schema';
 import { NotFoundSchema } from '@apps/gateway/src/common/swagger/schemas/not-found.schema';
@@ -7,6 +7,7 @@ import { ForbiddenSchema } from '@apps/gateway/src/common/swagger/schemas/forbid
 
 export function ApiUpdatePostDocs() {
   return applyDecorators(
+    ApiSecurity('bearer'),
     ApiOperation({
       summary: 'Update post',
       description: 'Allows a registered user update his post.',
