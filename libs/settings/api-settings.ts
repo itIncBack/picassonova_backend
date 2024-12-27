@@ -52,4 +52,16 @@ export class APISettings {
   @IsString()
   public readonly GOOGLE_RECAPTCHA_SITE_KEY: string =
     this.envVariables.GOOGLE_RECAPTCHA_SECRET_KEY;
+
+  //YANDEX CLOUD
+  @IsString()
+  public readonly ACCESS_KEY_ID: string = this.envVariables.ACCESS_KEY_ID;
+
+  @IsString()
+  public readonly SECRET_ACCESS_KEY: string =
+    this.envVariables.SECRET_ACCESS_KEY;
+
+  //MONGO DB
+  @IsString()
+  public readonly MONGO_URL: string = this.envVariables.MONGO_URL;
 }
