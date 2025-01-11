@@ -54,6 +54,26 @@ export class SessionsRepository {
     }
   }
 
+  public async getSessionById(sessionId: string) {
+    try {
+      return await this.prisma.session.findFirst({
+        where: { id: sessionId },
+        select: {
+          id: true,
+          deviceId: true,
+          userId: true,
+        },
+      });
+    } catch (e) {
+      console.error('Error retrieving session from the database:', {
+        error: (e as Error).message,
+      });
+      throw new InternalServerErrorException(
+        'Error retrieving session from the database',
+      );
+    }
+  }
+
   public async getSessionByUserAndDevice(deviceId: string, userId: string) {
     try {
       return await this.prisma.session.findFirst({

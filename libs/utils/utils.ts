@@ -14,3 +14,14 @@ export function sleep(duration: number): Promise<any> {
     setTimeout(() => resolve(true), duration);
   });
 }
+
+export function generateUrl(baseUrl: string, params: Record<string, string>) {
+  const url = new URL(baseUrl);
+
+  // Добавляем параметры в URL
+  Object.keys(params).forEach((key) =>
+    url.searchParams.append(key, params[key]),
+  );
+
+  return url.toString();
+}

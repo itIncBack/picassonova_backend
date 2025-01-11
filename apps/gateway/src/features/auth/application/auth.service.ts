@@ -341,6 +341,12 @@ export class AuthService {
 
     const { userId, deviceId, sessionId } = tokenPayload;
 
+    const session = await this.sessionsRepository.getSessionById(sessionId);
+
+    if (!session) {
+      throw new UnauthorizedException();
+    }
+
     await this.sessionsRepository.update(sessionId);
 
     return await this.generateTokens(userId, deviceId, sessionId);
@@ -358,5 +364,23 @@ export class AuthService {
     }
 
     return MeOutputDtoMapper(user);
+  }
+
+  async googleAuthRedirect({
+    userId,
+    userAgent,
+    ipAddress,
+  }: {
+    userId: string;
+    userAgent: string;
+    ipAddress: string;
+  }) {
+    const newSession = await this.createSession(userId, userAgent, ipAddress);
+
+    return await this.generateTokens(
+      newSession.userId,
+      newSession.deviceId,
+      newSession.id,
+    );
   }
 }

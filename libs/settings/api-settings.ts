@@ -44,14 +44,21 @@ export class APISettings {
   public readonly REFRESH_TOKEN_EXPIRED_IN: string =
     this.envVariables.REFRESH_TOKEN_EXPIRED_IN;
 
-  //GOOGLE_RECAPTCHA
+  //GOOGLE
   @IsString()
   public readonly GOOGLE_RECAPTCHA_SECRET_KEY: string =
     this.envVariables.GOOGLE_RECAPTCHA_SECRET_KEY;
-
   @IsString()
   public readonly GOOGLE_RECAPTCHA_SITE_KEY: string =
     this.envVariables.GOOGLE_RECAPTCHA_SECRET_KEY;
+  @IsString()
+  public readonly GOOGLE_CLIENT_ID: string = this.envVariables.GOOGLE_CLIENT_ID;
+  @IsString()
+  public readonly GOOGLE_CLIENT_SECRET: string =
+    this.envVariables.GOOGLE_CLIENT_SECRET;
+  @IsString()
+  public readonly GOOGLE_CALLBACK_URL: string =
+    this.envVariables.GOOGLE_CALLBACK_URL;
 
   //YANDEX CLOUD
   @IsString()

@@ -8,6 +8,7 @@ import { HttpModule } from '@nestjs/axios';
 import { HttpRequestService } from '@infrastructure/servises/http/http.service';
 import { JwtStrategy } from '@libs/strategies/jwt.strategy';
 import { UsersModule } from '@apps/gateway/src/features/users/users.module';
+import { GoogleStrategy } from '@libs/strategies/google.strategy';
 
 const basesProviders: Provider[] = [
   SharedService,
@@ -17,6 +18,7 @@ const basesProviders: Provider[] = [
   ReCaptchaService,
   HttpRequestService,
   JwtStrategy,
+  GoogleStrategy,
 ];
 
 @Module({
