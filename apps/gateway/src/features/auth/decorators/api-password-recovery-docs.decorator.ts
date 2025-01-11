@@ -1,6 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { BadRequestSchema } from '@apps/gateway/src/features/auth/swagger/schemas/bad-request.schema';
+import { BadRequestSchema } from '@libs/swagger/schemas/bad-request.schema';
 
 export function ApiPasswordRecoveryDocs() {
   return applyDecorators(

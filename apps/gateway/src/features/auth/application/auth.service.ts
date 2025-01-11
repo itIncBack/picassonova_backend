@@ -15,6 +15,8 @@ import { ConfirmationType } from '@prisma/client';
 import { APISettings } from '@settings/api-settings';
 import { SignInDto } from '@apps/gateway/src/features/auth/api/dto/sign-in.dto';
 import { MeOutputDtoMapper } from '@apps/gateway/src/features/auth/api/dto/output/me.output.dto';
+import { ConflictException } from '@infrastructure/exceptions/conflict.exception';
+import { GoneException } from '@infrastructure/exceptions/gone.exception';
 
 @Injectable()
 export class AuthService {
@@ -182,7 +184,7 @@ export class AuthService {
     const verifiedToken = this.sharedService.verifyConfirmationCode(code);
 
     if (!verifiedToken) {
-      throw new BadRequestException({
+      throw new GoneException({
         message: 'Confirmation code expired',
         key: 'code',
       });
@@ -193,13 +195,13 @@ export class AuthService {
 
     if (!confirmation) {
       throw new BadRequestException({
-        message: 'Activation code is not correct',
+        message: 'Confirmation code is not find',
         key: 'code',
       });
     }
 
     if (confirmation.isConfirmed) {
-      throw new BadRequestException({
+      throw new ConflictException({
         message: 'Email already confirmed',
         key: 'code',
       });
@@ -224,7 +226,7 @@ export class AuthService {
       );
 
     if (!confirmation || confirmation?.isConfirmed) {
-      throw new BadRequestException({
+      throw new ConflictException({
         message: 'Email already confirmed',
       });
     }

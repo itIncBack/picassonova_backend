@@ -1,6 +1,6 @@
-import { BadRequestSchema } from '../swagger/schemas/bad-request.schema';
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { BadRequestSchema } from '@libs/swagger/schemas/bad-request.schema';
 
 export function ApiSignUpDocs() {
   return applyDecorators(

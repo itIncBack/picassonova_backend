@@ -1,8 +1,8 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
 
-import { NotFoundSchema } from '@apps/gateway/src/common/swagger/schemas/not-found.schema';
-import { ForbiddenSchema } from '@apps/gateway/src/common/swagger/schemas/forbidden-schema';
+import { NotFoundSchema } from '@libs/swagger/schemas/not-found.schema';
+import { ForbiddenSchema } from '@libs/swagger/schemas/forbidden-schema';
 
 export function ApiDeletePostDocs() {
   return applyDecorators(

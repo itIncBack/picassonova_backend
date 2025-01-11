@@ -1,9 +1,9 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
 
-import { BadRequestSchema } from '@apps/gateway/src/common/swagger/schemas/bad-request.schema';
-import { NotFoundSchema } from '@apps/gateway/src/common/swagger/schemas/not-found.schema';
-import { ForbiddenSchema } from '@apps/gateway/src/common/swagger/schemas/forbidden-schema';
+import { BadRequestSchema } from '@libs/swagger/schemas/bad-request.schema';
+import { NotFoundSchema } from '@libs/swagger/schemas/not-found.schema';
+import { ForbiddenSchema } from '@libs/swagger/schemas/forbidden-schema';
 
 export function ApiUpdatePostDocs() {
   return applyDecorators(

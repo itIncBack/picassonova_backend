@@ -91,8 +91,8 @@ export class SharedService {
     const apiSettings = this.getApiSettings();
     const link =
       apiSettings.ENV === EnvironmentsEnum.PRODUCTION
-        ? `https://picassonova.online/auth/email-confirm?code=${confirmationCode}`
-        : `http://localhost:3000/auth/email-confirm?code=${confirmationCode}`;
+        ? `https://picassonova.online/auth/email-confirm?code=${confirmationCode}&email=${to}`
+        : `http://localhost:3000/auth/email-confirm?code=${confirmationCode}&email=${to}`;
     const subject = 'Confirm your email address';
     const text = `Please confirm your email address by clicking the following link: link`;
     const html = `<p>Please confirm your email address by clicking the link below:</p><p><a href="${link}">Confirm Email</a></p>`;
@@ -105,8 +105,8 @@ export class SharedService {
 
     const link =
       apiSettings.ENV === EnvironmentsEnum.PRODUCTION
-        ? `https://picassonova.online/auth/create-new-password?code=${confirmationCode}`
-        : `http://localhost:3000/auth/create-new-password?code=${confirmationCode}`;
+        ? `https://picassonova.online/auth/create-new-password?code=${confirmationCode}&email=${to}`
+        : `http://localhost:3000/auth/create-new-password?code=${confirmationCode}&email=${to}`;
 
     const subject = 'Password recovery';
     const text = `To finish password recovery please follow the link below: link`;
