@@ -1,6 +1,6 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
-import { AccessTokenSchema } from '../swagger/schemas/success-request.schema';
+import { AccessTokenSchema } from '../swagger/schemas/success-access-token.schema';
 
 export function ApiRefreshTokenDocs() {
   return applyDecorators(

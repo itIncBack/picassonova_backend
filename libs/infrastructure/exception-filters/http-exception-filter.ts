@@ -56,7 +56,14 @@ export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
 
     notice.code = status;
 
-    if (![HttpStatus.BAD_REQUEST, HttpStatus.FORBIDDEN].includes(status)) {
+    if (
+      ![
+        HttpStatus.BAD_REQUEST,
+        HttpStatus.FORBIDDEN,
+        HttpStatus.GONE,
+        HttpStatus.CONFLICT,
+      ].includes(status)
+    ) {
       notice.addError('An error occurred', null, status);
       notice.extensions.push(
         new InterlayerNoticeExtension(

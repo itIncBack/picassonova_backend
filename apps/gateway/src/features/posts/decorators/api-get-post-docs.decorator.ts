@@ -2,7 +2,7 @@ import { applyDecorators, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 import { SuccessResponsePostSchema } from '@apps/gateway/src/features/posts/swagger/schemas/success-response-post.schema';
-import { NotFoundSchema } from '@apps/gateway/src/common/swagger/schemas/not-found.schema';
+import { NotFoundSchema } from '@libs/swagger/schemas/not-found.schema';
 
 export function ApiGetPostDocs() {
   return applyDecorators(

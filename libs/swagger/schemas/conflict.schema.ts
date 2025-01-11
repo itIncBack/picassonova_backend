@@ -1,7 +1,9 @@
-export const BadRequestSchema = {
+import { HttpStatus } from '@nestjs/common';
+
+export const ConflictSchema = {
   example: {
     data: null,
-    code: 400,
+    code: HttpStatus.CONFLICT,
     extensions: [
       {
         message: 'Any massage',

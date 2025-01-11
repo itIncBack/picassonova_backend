@@ -8,8 +8,8 @@ import {
 } from '@nestjs/swagger';
 
 import { SuccessResponsePostSchema } from '@apps/gateway/src/features/posts/swagger/schemas/success-response-post.schema';
-import { BadRequestSchema } from '@apps/gateway/src/common/swagger/schemas/bad-request.schema';
-import { ForbiddenSchema } from '@apps/gateway/src/common/swagger/schemas/forbidden-schema';
+import { BadRequestSchema } from '@libs/swagger/schemas/bad-request.schema';
+import { ForbiddenSchema } from '@libs/swagger/schemas/forbidden-schema';
 import { CreatePostInputDto } from '@apps/gateway/src/features/posts/api/dto/input/create-post.input.dto';
 
 export function ApiCreatePostDocs() {
