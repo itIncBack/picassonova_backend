@@ -30,7 +30,7 @@ export class UsersRepository {
     }
   }
 
-  public async getUserByEmail(email: string) {
+  public async getUserByEmail(email?: string) {
     try {
       return await this.prisma.user.findFirst({
         where: {

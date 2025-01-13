@@ -14,3 +14,19 @@ export function sleep(duration: number): Promise<any> {
     setTimeout(() => resolve(true), duration);
   });
 }
+
+export function generateUrl(
+  baseUrl: string,
+  searchParams?: Record<string, string>,
+) {
+  const url = new URL(baseUrl);
+
+  // Добавляем параметры в URL
+  if (searchParams) {
+    Object.keys(searchParams).forEach((key) =>
+      url.searchParams.append(key, searchParams[key]),
+    );
+  }
+
+  return url.toString();
+}

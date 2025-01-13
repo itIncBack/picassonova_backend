@@ -33,14 +33,68 @@ import { SignInOutputMapper } from '@apps/gateway/src/features/auth/api/dto/outp
 import { RefreshTokenOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/refresh-token.output.dto';
 import { BearerAuthGuard } from '@libs/guards/bearer-auth-guard.service';
 import { ApiMeDocs } from '@apps/gateway/src/features/auth/decorators/api-me-docs.decorator';
+import { GoogleAuthGuard } from '@libs/guards/google-auth-guard.service';
+import { User } from '@prisma/client';
+import { generateUrl } from '@libs/utils/utils';
+import { EnvironmentsEnum } from '@settings/env-settings';
+import { APISettings } from '@settings/api-settings';
+import { ConfigService } from '@nestjs/config';
+import { ConfigurationType } from '@settings/configuration';
+import { ApiGoogleOAuthDocs } from '@apps/gateway/src/features/auth/decorators/api-google-oauth-docs.decorator';
+import { ApiGoogleOAutCallBackDocs } from '@apps/gateway/src/features/auth/decorators/api-google-oauth-callback-docs.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
+  private readonly apiSettings: APISettings;
+
   constructor(
     private readonly authService: AuthService,
     private readonly cookieService: CookieService,
-  ) {}
+    private readonly configService: ConfigService<ConfigurationType, true>,
+  ) {
+    this.apiSettings = this.configService.get('apiSettings', { infer: true });
+  }
+
+  @Get('google')
+  @ApiGoogleOAuthDocs()
+  @UseGuards(GoogleAuthGuard)
+  async googleAuth() {
+    // Initiates the Google OAuth process
+  }
+
+  @Get('google/callback')
+  @ApiGoogleOAutCallBackDocs()
+  @UseGuards(GoogleAuthGuard)
+  async googleAuthRedirect(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const user = req.user as Omit<User, 'password'>;
+    const ipAddress = req.ip || 'unknown';
+    const userAgent = req.headers['user-agent'] || 'unknown';
+
+    const tokens = await this.authService.googleAuthRedirect({
+      userId: user.id,
+      userAgent,
+      ipAddress,
+    });
+
+    const link =
+      this.apiSettings.ENV === EnvironmentsEnum.PRODUCTION
+        ? `https://picassonova.online/auth/google`
+        : `http://localhost:3000/auth/google`;
+
+    const url = generateUrl(link);
+
+    this.cookieService.setCookie(
+      res,
+      COOKIE_KEY.REFRESH_TOKEN,
+      tokens.refreshToken,
+    );
+
+    res.redirect(url);
+  }
 
   @Post('sign-up')
   @ApiSignUpDocs()

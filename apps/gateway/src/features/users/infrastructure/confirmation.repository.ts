@@ -6,6 +6,7 @@ interface ICreateConfirmation {
   userId: string;
   code: string;
   type: ConfirmationType;
+  isConfirmed?: boolean;
 }
 
 @Injectable()
@@ -13,7 +14,7 @@ export class ConfirmationRepository {
   constructor(private prisma: PrismaService) {}
 
   public async createConfirmation(payload: ICreateConfirmation) {
-    const { userId, code, type } = payload;
+    const { userId, code, type, isConfirmed = false } = payload;
 
     try {
       return await this.prisma.confirmation.create({
@@ -21,6 +22,7 @@ export class ConfirmationRepository {
           userId,
           code,
           type,
+          isConfirmed,
         },
       });
     } catch (e) {
