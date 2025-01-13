@@ -67,6 +67,11 @@ spec:
                 secretKeyRef:
                   name: picassonova-files-production-config-secret
                   key: JWT_SECRET_KEY
+            - name: EMAIL_CONFIRMATION_CODE_EXPIRED_IN
+              valueFrom:
+                secretKeyRef:
+                  name: picassonova-files-production-config-secret
+                  key: EMAIL_CONFIRMATION_CODE_EXPIRED_IN
             - name: GOOGLE_RECAPTCHA_SECRET_KEY
               valueFrom:
                 secretKeyRef:
