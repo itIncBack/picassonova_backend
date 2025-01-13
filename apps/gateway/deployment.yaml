@@ -102,3 +102,18 @@ spec:
                 secretKeyRef:
                   name: picassonova-gateway-production-config-secret
                   key: MONGO_URL
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: picassonova-gateway-production-config-secret
+                  key: GOOGLE_CLIENT_ID
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: picassonova-gateway-production-config-secret
+                  key: GOOGLE_CLIENT_SECRET
+            - name: GOOGLE_CALLBACK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: picassonova-gateway-production-config-secret
+                  key: GOOGLE_CALLBACK_URL

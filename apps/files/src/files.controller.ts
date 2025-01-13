@@ -1,6 +1,5 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
-
 import { FilesService } from './files.service';
 import { DELETE_IMG, UPLOAD_IMG } from '@libs/base/constants/messages-patterns';
 
