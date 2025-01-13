@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '@settings/configuration';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { EMPTY_PASS } from '@libs/utils/consts';
+import { EMPTY_PASS } from '@libs/base/constants/consts';
 import { UsersRepository } from '@apps/gateway/src/features/users/infrastructure/users.repository';
 import { ConfirmationType } from '@prisma/client';
 import { SharedService } from '@infrastructure/servises/shared/shared.service';

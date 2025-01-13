@@ -62,11 +62,12 @@ export class APISettings {
 
   //YANDEX CLOUD
   @IsString()
-  public readonly ACCESS_KEY_ID: string = this.envVariables.ACCESS_KEY_ID;
+  public readonly YANDEX_ACCESS_KEY_ID: string =
+    this.envVariables.YANDEX_ACCESS_KEY_ID;
 
   @IsString()
-  public readonly SECRET_ACCESS_KEY: string =
-    this.envVariables.SECRET_ACCESS_KEY;
+  public readonly YANDEX_SECRET_ACCESS_KEY: string =
+    this.envVariables.YANDEX_SECRET_ACCESS_KEY;
 
   //MONGO DB
   @IsString()

@@ -1,49 +1,29 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ConfigService } from '@nestjs/config';
-
 import { PostImg } from '@apps/files/src/schemas/post-img.schema';
 import { getCurrentISOStringDate } from '@libs/utils/dates';
 import {
   BUCKET_NAME,
   S3_ENDPOINT,
-  S3_REGION,
-} from '@apps/files/src/infrastructure/constants/s3-bucket-constants';
-import { ConfigurationType } from '@settings/configuration';
+} from '@apps/files/src/base/constants/s3-bucket-constants';
+import { S3Service } from '@apps/files/src/infrastructure/services/s3service.service';
 
 @Injectable()
 export class FilesService {
-  s3Client: S3Client;
-
   constructor(
-    private readonly configService: ConfigService<ConfigurationType, true>,
+    private readonly s3Service: S3Service,
     @InjectModel(PostImg.name) private postImgModel: Model<PostImg>,
-  ) {
-    const apiSettings = configService.get('apiSettings', { infer: true });
-
-    this.s3Client = new S3Client({
-      region: S3_REGION,
-      endpoint: S3_ENDPOINT,
-      credentials: {
-        accessKeyId: apiSettings.ACCESS_KEY_ID,
-        secretAccessKey: apiSettings.SECRET_ACCESS_KEY,
-      },
-    });
-  }
-
-  getHello(): string {
-    return 'Files';
-  }
+  ) {}
 
   async savePostImg(file: Express.Multer.File) {
     const fileExtension =
       file.originalname.split('.')[file.originalname.split('.').length - 1];
+
     const imageUrl = `uploads/${crypto.randomUUID()}.${fileExtension}`;
 
     try {
-      await this.saveFile({
+      await this.uploadFile({
         fileBuffer: file.buffer,
         filePath: imageUrl,
         fileSize: file.size,
@@ -60,7 +40,7 @@ export class FilesService {
 
     return {
       imgUrl: `${S3_ENDPOINT}/${BUCKET_NAME}/${imageUrl}`,
-      imgId: imgInDb._id.toString(),
+      imgId: String(imgInDb._id),
     };
   }
 
@@ -72,21 +52,12 @@ export class FilesService {
     return !!res;
   }
 
-  //todo move to spec service with s3Client
-  async saveFile(file: {
+  async uploadFile(file: {
     mimetype: string;
     filePath: string;
     fileBuffer: Buffer;
     fileSize: number;
   }) {
-    await this.s3Client.send(
-      new PutObjectCommand({
-        Bucket: BUCKET_NAME,
-        Key: file.filePath,
-        Body: file.fileBuffer,
-        ContentType: file.mimetype,
-        ContentLength: file.fileSize,
-      }),
-    );
+    await this.s3Service.uploadFile(file);
   }
 }
