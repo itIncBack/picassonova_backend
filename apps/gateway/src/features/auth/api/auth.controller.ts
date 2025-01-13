@@ -26,7 +26,6 @@ import { ApiPasswordRecoveryDocs } from '@apps/gateway/src/features/auth/decorat
 import { NewPasswordDto } from '@apps/gateway/src/features/auth/api/dto/input/new-password.input.dto';
 import { ApiNewPasswordDocs } from '@apps/gateway/src/features/auth/decorators/api-new-password-docs.decorator';
 import { ApiRefreshTokenDocs } from '@apps/gateway/src/features/auth/decorators/api-refresh-token-docs.decorator';
-import { COOKIE_KEY } from '@libs/utils/consts';
 import { CookieService } from '@infrastructure/servises/cookie/cookie.service';
 import { SignInMapper } from '@apps/gateway/src/features/auth/api/dto/sign-in.dto';
 import { SignInOutputMapper } from '@apps/gateway/src/features/auth/api/dto/output/sign-in.output.dto';
@@ -42,6 +41,7 @@ import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '@settings/configuration';
 import { ApiGoogleOAuthDocs } from '@apps/gateway/src/features/auth/decorators/api-google-oauth-docs.decorator';
 import { ApiGoogleOAutCallBackDocs } from '@apps/gateway/src/features/auth/decorators/api-google-oauth-callback-docs.decorator';
+import { COOKIE_KEY } from '@libs/base/constants/cookie-keys';
 
 @ApiTags('Auth')
 @Controller('auth')

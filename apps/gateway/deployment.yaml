@@ -87,16 +87,16 @@ spec:
                 secretKeyRef:
                   name: picassonova-gateway-production-config-secret
                   key: GOOGLE_RECAPTCHA_SITE_KEY
-            - name: ACCESS_KEY_ID
+            - name: YANDEX_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
                   name: picassonova-gateway-production-config-secret
-                  key: ACCESS_KEY_ID
-            - name: SECRET_ACCESS_KEY
+                  key: YANDEX_ACCESS_KEY_ID
+            - name: YANDEX_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: picassonova-gateway-production-config-secret
-                  key: SECRET_ACCESS_KEY
+                  key: YANDEX_SECRET_ACCESS_KEY
             - name: MONGO_URL
               valueFrom:
                 secretKeyRef:

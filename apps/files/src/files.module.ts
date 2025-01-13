@@ -12,6 +12,7 @@ import configuration, {
   validate,
 } from '@settings/configuration';
 import { EnvironmentsEnum } from '@settings/env-settings';
+import { S3Service } from '@apps/files/src/infrastructure/services/s3service.service';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import { EnvironmentsEnum } from '@settings/env-settings';
     ]),
   ],
   controllers: [FilesController],
-  providers: [FilesService, S3Client],
+  providers: [FilesService, S3Service],
   exports: [FilesService],
 })
 export class FilesModule {}

@@ -5,7 +5,6 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-
 import { PostsRepository } from '@apps/gateway/src/features/posts/infrastructure/posts.repository';
 import { CreatePostInputDto } from '@apps/gateway/src/features/posts/api/dto/input/create-post.input.dto';
 import { GatewayService } from '@apps/gateway/src/gateway.service';

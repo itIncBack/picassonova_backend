@@ -15,9 +15,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import multer from 'multer';
-
 import { PostsService } from '@apps/gateway/src/features/posts/application/posts.service';
 import { BearerAuthGuard } from '@libs/guards/bearer-auth-guard.service';
 import { CreatePostInputDto } from '@apps/gateway/src/features/posts/api/dto/input/create-post.input.dto';
@@ -30,6 +27,7 @@ import { ApiGetPostsByUserIdDocs } from '@apps/gateway/src/features/posts/decora
 import { ApiUpdatePostDocs } from '@apps/gateway/src/features/posts/decorators/api-update-post-docs.decorator';
 import { ApiDeletePostDocs } from '@apps/gateway/src/features/posts/decorators/api-delete-post-docs.decorator';
 import { InterlayerNotice } from '@libs/base/models/Interlayer';
+import { createFilesInterceptor } from '@infrastructure/interceptors/files.interceptor';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -42,18 +40,7 @@ export class PostsController {
   @Post()
   @ApiCreatePostDocs()
   @UseGuards(BearerAuthGuard)
-  @UseInterceptors(
-    FilesInterceptor('photos', 10, {
-      storage: multer.memoryStorage(),
-      limits: { fileSize: 20 * 1024 * 1024 }, // Ограничение на 20 МБ
-      fileFilter: (req, file, cb) => {
-        if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
-          return cb(new Error('Only image files are allowed!'), false);
-        }
-        cb(null, true);
-      },
-    }),
-  )
+  @UseInterceptors(createFilesInterceptor('photos', 10))
   @HttpCode(HttpStatus.OK)
   async createPost(
     @Req() request: Request,
