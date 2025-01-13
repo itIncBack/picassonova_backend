@@ -40,6 +40,8 @@ import { EnvironmentsEnum } from '@settings/env-settings';
 import { APISettings } from '@settings/api-settings';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '@settings/configuration';
+import { ApiGoogleOAuthDocs } from '@apps/gateway/src/features/auth/decorators/api-google-oauth-docs.decorator';
+import { ApiGoogleOAutCallBackDocs } from '@apps/gateway/src/features/auth/decorators/api-google-oauth-callback-docs.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -55,12 +57,14 @@ export class AuthController {
   }
 
   @Get('google')
+  @ApiGoogleOAuthDocs()
   @UseGuards(GoogleAuthGuard)
   async googleAuth() {
     // Initiates the Google OAuth process
   }
 
   @Get('google/callback')
+  @ApiGoogleOAutCallBackDocs()
   @UseGuards(GoogleAuthGuard)
   async googleAuthRedirect(
     @Req() req: Request,
@@ -81,7 +85,7 @@ export class AuthController {
         ? `https://picassonova.online/auth/google`
         : `http://localhost:3000/auth/google`;
 
-    const url = generateUrl(link, {});
+    const url = generateUrl(link);
 
     this.cookieService.setCookie(
       res,

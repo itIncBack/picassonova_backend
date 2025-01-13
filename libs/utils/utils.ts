@@ -15,13 +15,18 @@ export function sleep(duration: number): Promise<any> {
   });
 }
 
-export function generateUrl(baseUrl: string, params: Record<string, string>) {
+export function generateUrl(
+  baseUrl: string,
+  searchParams?: Record<string, string>,
+) {
   const url = new URL(baseUrl);
 
   // Добавляем параметры в URL
-  Object.keys(params).forEach((key) =>
-    url.searchParams.append(key, params[key]),
-  );
+  if (searchParams) {
+    Object.keys(searchParams).forEach((key) =>
+      url.searchParams.append(key, searchParams[key]),
+    );
+  }
 
   return url.toString();
 }
