@@ -1,6 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Post } from '@prisma/client';
-
 import { PrismaService } from '@apps/gateway/prisma/prisma.service';
 import { getCurrentISOStringDate } from '@libs/utils/dates';
 
@@ -8,7 +7,7 @@ import { getCurrentISOStringDate } from '@libs/utils/dates';
 export class PostsRepository {
   constructor(private prisma: PrismaService) {}
 
-  public async createPost(payload: { userId: string; description: string }) {
+  public async createPost(payload: { userId: string; description?: string }) {
     const { userId, description } = payload;
 
     try {

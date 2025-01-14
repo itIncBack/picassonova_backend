@@ -9,7 +9,7 @@ export class PostImageDto {
 export class PostOutputDto {
   id: string;
   userId: string;
-  description: string;
+  description: string | null;
   createdAt: string;
   updatedAt: string;
   postImages: PostImageDto[];
