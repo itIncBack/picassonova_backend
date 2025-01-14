@@ -5,23 +5,17 @@ import {
   IsDefined,
   IsOptional,
   IsString,
-  MaxLength,
-  MinLength,
 } from 'class-validator';
 
 export class CreatePostInputDto {
   @ApiProperty({
     description: 'Post description',
     example: 'Post description',
-    minLength: 1,
-    maxLength: 500,
-    required: true,
+    required: false,
   })
-  @IsDefined()
+  @IsOptional()
   @IsString()
-  @MinLength(1)
-  @MaxLength(500)
-  description: string;
+  description?: string;
 
   @ApiProperty({
     type: 'array',
@@ -29,10 +23,11 @@ export class CreatePostInputDto {
       type: 'string',
       format: 'binary',
     },
+    required: true,
     description: 'Upload photos',
   })
-  @IsOptional()
+  @IsDefined()
   @IsArray()
   @ArrayMinSize(1)
-  photos?: Express.Multer.File[];
+  photos: Express.Multer.File[];
 }

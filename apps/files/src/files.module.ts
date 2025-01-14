@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
-import { S3Client } from '@aws-sdk/client-s3';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import process from 'process';
-
 import { FilesController } from './files.controller';
 import { FilesService } from './files.service';
 import { PostImg, PostImgSchema } from './schemas/post-img.schema';
