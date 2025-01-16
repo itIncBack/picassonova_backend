@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  ArrayMinSize,
-  IsArray,
-  IsDefined,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { ArrayMinSize, IsArray, IsOptional, IsString } from 'class-validator';
 
 export class CreatePostInputDto {
   @ApiProperty({
@@ -26,8 +20,8 @@ export class CreatePostInputDto {
     required: true,
     description: 'Upload photos',
   })
-  @IsDefined()
+  @IsOptional()
   @IsArray()
   @ArrayMinSize(1)
-  photos: Express.Multer.File[];
+  photos?: Express.Multer.File[];
 }
