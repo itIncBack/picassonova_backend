@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UploadedFiles,
   UseGuards,
@@ -20,7 +21,10 @@ import { BearerAuthGuard } from '@libs/guards/bearer-auth-guard.service';
 import { CreatePostInputDto } from '@apps/gateway/src/features/posts/api/dto/input/create-post.input.dto';
 import { PostsQueryRepository } from '@apps/gateway/src/features/posts/infrastructure/posts.query.repository';
 import { UpdatePostInputDto } from '@apps/gateway/src/features/posts/api/dto/input/update-post.input.dto';
-import { PostOutputDto } from '@apps/gateway/src/features/posts/api/dto/output/post.output.dto';
+import {
+  PostItem,
+  PostOutputDto,
+} from '@apps/gateway/src/features/posts/api/dto/output/post.output.dto';
 import { ApiCreatePostDocs } from '@apps/gateway/src/features/posts/decorators/api-create-post-docs.decorator';
 import { ApiGetPostDocs } from '@apps/gateway/src/features/posts/decorators/api-get-post-docs.decorator';
 import { ApiGetPostsByUserIdDocs } from '@apps/gateway/src/features/posts/decorators/api-get-posts-by-userId-docs.decorator';
@@ -28,6 +32,7 @@ import { ApiUpdatePostDocs } from '@apps/gateway/src/features/posts/decorators/a
 import { ApiDeletePostDocs } from '@apps/gateway/src/features/posts/decorators/api-delete-post-docs.decorator';
 import { InterlayerNotice } from '@libs/base/models/Interlayer';
 import { createFilesInterceptor } from '@infrastructure/interceptors/files.interceptor';
+import { PaginationQueryDto } from '@apps/gateway/src/features/posts/api/dto/input/pagination-query.dto';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -46,7 +51,7 @@ export class PostsController {
     @Req() request: Request,
     @Body() dto: CreatePostInputDto,
     @UploadedFiles() imgs: Express.Multer.File[],
-  ): Promise<InterlayerNotice<PostOutputDto>> {
+  ): Promise<InterlayerNotice<PostItem>> {
     const userId = request.currentUserId;
     const postId = await this.postsService.createPost(userId, dto, imgs);
 
@@ -56,11 +61,11 @@ export class PostsController {
   @Get(':userId')
   @ApiGetPostsByUserIdDocs()
   @UseGuards(BearerAuthGuard)
-  async getPosts(
+  async getPostsByUserId(
     @Param('userId') userId: string,
-  ): Promise<InterlayerNotice<PostOutputDto[]>> {
-    //todo add pagination
-    return this.postsQueryRepository.getPostsByUserId(userId);
+    @Query() paginationQuery: PaginationQueryDto,
+  ): Promise<InterlayerNotice<PostOutputDto>> {
+    return this.postsQueryRepository.getPostsByUserId(userId, paginationQuery);
   }
 
   @Get('post/:postId')
@@ -68,7 +73,7 @@ export class PostsController {
   @UseGuards(BearerAuthGuard)
   async getPostById(
     @Param('postId') postId: string,
-  ): Promise<InterlayerNotice<PostOutputDto>> {
+  ): Promise<InterlayerNotice<PostItem>> {
     return this.postsQueryRepository.getPostById(postId);
   }
 
