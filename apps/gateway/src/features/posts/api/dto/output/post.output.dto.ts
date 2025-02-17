@@ -6,7 +6,7 @@ export class PostImageDto {
   createdAt: string;
 }
 
-export class PostOutputDto {
+export class PostItem {
   id: string;
   userId: string;
   description: string | null;
@@ -15,11 +15,21 @@ export class PostOutputDto {
   postImages: PostImageDto[];
 }
 
+export class PostOutputDto {
+  items: PostItem[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
 // MAPPERS
 export const postOutputDtoMapper = (
   post: Post & { postImages: PostImages[] },
-): PostOutputDto => {
-  const outputDto = new PostOutputDto();
+): PostItem => {
+  const outputDto = new PostItem();
 
   outputDto.id = post.id;
   outputDto.userId = post.userId;

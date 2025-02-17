@@ -6,10 +6,12 @@ import {
 
 import { PrismaService } from '@apps/gateway/prisma/prisma.service';
 import {
+  PostItem,
   PostOutputDto,
   postOutputDtoMapper,
 } from '@apps/gateway/src/features/posts/api/dto/output/post.output.dto';
 import { InterlayerNotice } from '@libs/base/models/Interlayer';
+import { PaginationQueryDto } from '@apps/gateway/src/features/posts/api/dto/input/pagination-query.dto';
 
 @Injectable()
 export class PostsQueryRepository {
@@ -17,21 +19,39 @@ export class PostsQueryRepository {
 
   public async getPostsByUserId(
     userId: string,
-  ): Promise<InterlayerNotice<PostOutputDto[]>> {
+    paginationQuery: PaginationQueryDto,
+  ): Promise<InterlayerNotice<PostOutputDto>> {
     try {
-      //todo add pagination
-      const posts = await this.prisma.post.findMany({
-        where: { userId, deletedAt: null },
-        include: {
-          postImages: true,
-        },
-      });
+      const { page, limit } = paginationQuery;
+      const skip = (page - 1) * limit;
 
-      const notice = new InterlayerNotice<PostOutputDto[]>(null);
+      const [posts, total] = await Promise.all([
+        this.prisma.post.findMany({
+          where: { userId, deletedAt: null },
+          skip,
+          take: limit,
+          orderBy: { createdAt: 'desc' },
+        }),
+        this.prisma.post.count(),
+      ]);
+
+      const totalPages = Math.ceil(total / limit);
+
+      const notice = new InterlayerNotice<PostOutputDto>(null);
 
       const mappedData = posts.map(postOutputDtoMapper);
 
-      notice.addData(mappedData);
+      const mappedDataWithPagination = {
+        items: mappedData,
+        meta: {
+          total,
+          page,
+          limit,
+          totalPages,
+        },
+      };
+
+      notice.addData(mappedDataWithPagination);
 
       return notice;
     } catch (e) {
@@ -44,9 +64,7 @@ export class PostsQueryRepository {
     }
   }
 
-  public async getPostById(
-    id: string,
-  ): Promise<InterlayerNotice<PostOutputDto>> {
+  public async getPostById(id: string): Promise<InterlayerNotice<PostItem>> {
     try {
       const post = await this.prisma.post.findFirst({
         where: { id, deletedAt: null },
@@ -59,7 +77,7 @@ export class PostsQueryRepository {
         throw new NotFoundException();
       }
 
-      const notice = new InterlayerNotice<PostOutputDto>(null);
+      const notice = new InterlayerNotice<PostItem>(null);
 
       const mappedData = postOutputDtoMapper(post);
 
