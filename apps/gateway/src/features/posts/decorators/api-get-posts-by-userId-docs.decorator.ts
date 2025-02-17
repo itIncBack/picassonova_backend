@@ -1,5 +1,10 @@
 import { applyDecorators, HttpStatus } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { SuccessResponsePostsSchema } from '@apps/gateway/src/features/posts/swagger/schemas/success-response-posts.schema';
 import {
   PAGINATION_DEFAULT_LIMIT,
@@ -11,6 +16,7 @@ import {
 
 export function ApiGetPostsByUserIdDocs() {
   return applyDecorators(
+    ApiSecurity('bearer'),
     ApiOperation({
       summary: 'Get all users posts by userId',
       description: 'Allows registered users get all users posts by userId.',
