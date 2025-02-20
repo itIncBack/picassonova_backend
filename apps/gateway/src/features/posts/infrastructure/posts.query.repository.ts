@@ -28,6 +28,9 @@ export class PostsQueryRepository {
       const [posts, total] = await Promise.all([
         this.prisma.post.findMany({
           where: { userId, deletedAt: null },
+          include: {
+            postImages: true,
+          },
           skip,
           take: limit,
           orderBy: { createdAt: 'desc' },
