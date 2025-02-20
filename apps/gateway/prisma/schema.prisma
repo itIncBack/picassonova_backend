@@ -1,0 +1,77 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  // output = "../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique
+  createdAt     DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime       @updatedAt @db.Timestamptz(6)
+  role          Role           @default(BASIC)
+  password      String         @default("default_password")
+  userName      String         @default("unknown_user")
+  Confirmations Confirmation[]
+  Sessions      Session[]
+  posts         Post[]
+}
+
+model Confirmation {
+  id          String           @id @default(uuid()) @db.Uuid
+  code        String           @db.VarChar
+  type        ConfirmationType
+  isConfirmed Boolean          @default(false)
+  createdAt   DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime         @updatedAt @db.Timestamptz(6)
+  userId      String           @db.Uuid
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  ip        String
+  title     String
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+  deviceId  String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Post {
+  id          String       @id @default(uuid()) @db.Uuid
+  userId      String       @db.Uuid
+  description String?
+  createdAt   DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime     @updatedAt @db.Timestamptz(6)
+  deletedAt   DateTime?
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postImages  PostImages[]
+}
+
+model PostImages {
+  id        String    @id
+  postId    String    @db.Uuid
+  imageUrl  String
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime  @updatedAt @db.Timestamptz(6)
+  deletedAt DateTime?
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  BASIC
+  ADMIN
+}
+
+enum ConfirmationType {
+  EMAIL_VERIFICATION
+  PASSWORD_RECOVERY
+}
